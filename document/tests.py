@@ -3,13 +3,14 @@ import datetime
 
 from django.test import TestCase, Client
 
-from accounts import ProjectPlannerUser
-from deliverable.function_for_deliverable import define_deliverable_progression
-from deliverable.models import Deliverable, Document, ContributorDeliverable
-from project.models import Project
-
 
 # display_deliverable_view Page
+from account.models import ProjectPlannerUser
+from document.models import Document
+from project.function_for_project import define_deliverable_progression
+from project.models import Project, Deliverable, ContributorDeliverable
+
+
 class DisplayDeliverableViewTestCase(TestCase):
 
     def setUp(self):
