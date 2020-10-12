@@ -1,3 +1,386 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils import timezone
 
-# Create your views here.
+from accounts.function_for_accounts import send_notifications_to_contributor
+from accounts.models import ProjectPlannerUser
+from deliverable.models import Deliverable
+from .forms import CreateProjectForm, AddMemberToProjectForm,\
+    AddDeliverableToProjectForm, ModifyProjectForm
+from .function_for_project import contributor_is_not_already_in_the_list, \
+    define_project_advancement
+from .models import Project, ContributorProject
+
+
+def index_view(request):
+    """
+    Return index page.
+    :param request:
+    :return:
+    """
+
+    # return the index page
+    return render(request, 'project/index.html')
+
+
+def mentions_view(request):
+    """
+    Return mentions page.
+    :param request:
+    :return:
+    """
+    # return the mentions page
+    return render(request, 'project/mentions.html')
+
+
+def create_project_view(request):
+    """
+    Create a project based on user's description.
+    :param request:
+    :return:
+    """
+    # On POST method
+    if request.method == 'POST':
+        # Gather information into the right form
+        form = CreateProjectForm(request.POST)
+        if form.is_valid():
+            # Generate the project
+            form.save()
+            # Collect information from form
+            project_created_name = form.data['name']
+            # Modification on project and add a first deliverable
+            project = Project.objects.get(name=project_created_name)
+            project.contributor.add(request.user)
+            first_deliverable = Deliverable(name='Project Frame of ' + project.name,
+                                            description="Project details",
+                                            project=project)
+            first_deliverable.save()
+            first_deliverable.contributor.add(request.user)
+
+            # Email contributor
+            send_notifications_to_contributor(project)
+            # Message
+            messages.success(request, 'Project created!')
+
+            # Redirect to the project main page
+            return redirect('project:displayProject',
+                            project_id=project.id)
+        else:
+            # Message
+            messages.warning(request, 'Some fields are not correct.')
+    else:
+        form = CreateProjectForm()
+
+    return render(request, 'project/createProject.html', {'form': form})
+
+
+def display_project_view(request, project_id):
+    """
+    Display the home page of a project.
+    :param request:
+    :param project_id:
+    :return:
+    """
+    # Check the advancement
+    define_project_advancement(project_id)
+    # Gather the information about the project
+    project = Project.objects.get(id=project_id)
+    contributors = ContributorProject.objects.filter(project=project)
+    contributors_length = len(contributors)
+
+    # Check if the user is a contributor of the deliverable
+    current_user = ContributorProject.objects.\
+        filter(project=project, projectPlannerUser=request.user)
+    if len(current_user) == 0:
+        current_user_role = "Not a Contributor"
+        current_user = "John DOE"
+    else:
+        current_user_role = current_user[0].permission
+        current_user = current_user[0]
+
+    # Generate a context
+    context = {
+        'project': project,
+        'user': request.user,
+        'current_user': current_user,
+        'user_function': current_user_role,
+        'contributors_length': contributors_length
+    }
+
+    # Render a flex or frozen template
+    if project.status != "FINISHED":
+        return render(request, 'project/displayProject.html', context)
+    else:
+        return render(request,
+                      'project/displayProjectWithoutForms.html', context)
+
+
+def modify_project_view(request, project_id):
+    """
+    Modify the content of a deliverable.
+    :param request:
+    :param project_id:
+    :return:
+    """
+    # Gather information
+    project = Project.objects.get(id=project_id)
+
+    if request.method == 'POST':
+        # Gather information from form
+        form = ModifyProjectForm(request.POST)
+        if form.is_valid():
+            # Modify the project content
+            project = Project.objects.get(id=project_id)
+            project_description_updated = form.data['description']
+            project_due_date_updated = form.data['dueDate']
+            project.description = project_description_updated
+            project.dueDate = project_due_date_updated
+            project.save()
+
+            # Message
+            messages.success(request, 'Project modified!')
+
+            # Redirect to the project main page
+            return redirect('project:displayProject', project_id=project.id)
+        else:
+            # Message
+            messages.warning(request, 'Some fields are not correct.')
+    else:
+        # Generate a form
+        form = ModifyProjectForm()
+
+    context = {
+        'form': form,
+        'project': project,
+    }
+
+    return render(request, 'project/modifyProject.html', context)
+
+
+def delete_project_view(request, project_id):
+    """
+    Delete the project in the database.
+    :param request:
+    :param project_id:
+    :return:
+    """
+    # Gather information
+    project = Project.objects.get(id=project_id)
+
+    # Modify content
+    project.deletionDate = timezone.now()
+    project.status = "Deleted"
+    project.save()
+
+    # Deletion
+    project.delete()
+
+    # Email contributor
+    send_notifications_to_contributor(project)
+    # Message
+    messages.success(request, 'Project deleted')
+
+    return redirect('project:index')
+
+
+def team_members_listing_view(request, project_id):
+    """
+    Display members related to the project.
+    :param request:
+    :param project_id:
+    :return:
+    """
+    # Gather information
+    project = Project.objects.get(id=project_id)
+    current_user_role = ContributorProject.objects.\
+        get(project=project, projectPlannerUser=request.user)
+    members = ContributorProject.objects.filter(project=project_id).\
+        order_by('-permission')
+    contributor_list = []
+    for member in members:
+        contributor_list.append(member.projectPlannerUser.email)
+
+    # On POST method
+    if request.method == 'POST':
+        # Gather information from form
+        form = AddMemberToProjectForm(request.POST)
+        # Check that user designed is not already a contributor
+        member_designed = ProjectPlannerUser.objects.\
+            get(id=form.data['projectPlannerUser'])
+        already_in_the_list_check = contributor_is_not_already_in_the_list(member_designed,
+                                                                           contributor_list)
+
+        if form.is_valid() and not already_in_the_list_check:
+            # Add user in the project
+            member_designed = ProjectPlannerUser.objects.\
+                get(id=form.data['projectPlannerUser'])
+            member_added = ContributorProject(project=project,
+                                              projectPlannerUser=member_designed,
+                                              permission='Contributor')
+            member_added.save()
+
+            # Message
+            messages.success(request, 'A new team member is added!')
+
+            # Reload page
+            return redirect('project:teamMembersListing',
+                            project_id=project_id)
+        else:
+            # Message
+            messages.error(request, "User already in the team")
+
+            # Reset field
+            form = AddMemberToProjectForm()
+    # Initial page call
+    else:
+        # Add a member
+        form = AddMemberToProjectForm()
+
+    # Generate a context
+    context = {
+        'project': project,
+        'members': members,
+        'form': form,
+        'user_role': current_user_role.permission
+    }
+
+    return render(request, 'project/projectTeamMembersListing.html', context)
+
+
+def delete_team_member_view(request, member_id):
+    """
+    Remove a team member from a project.
+    :param member_id:
+    :return:
+    """
+    # Gather project information
+    member_to_remove = ContributorProject.objects.get(id=member_id)
+    project_id = member_to_remove.project.id
+
+    # Remove member from contributor list
+    member_to_remove.removingDate = timezone.now()
+    member_to_remove.save()
+    member_to_remove.delete()
+
+    # Message
+    messages.success(request, 'Team member removed')
+
+    # Go back to homepage
+    return redirect('project:teamMembersListing', project_id=project_id)
+
+
+def deliverable_listing_view(request, project_id):
+    """
+    Display deliverables related to the project.
+    :param request:
+    :param project_id:
+    :return:
+    """
+    # Gather project information
+    project = Project.objects.get(id=project_id)
+    current_user_role = ContributorProject.objects.\
+        get(project=project, projectPlannerUser=request.user)
+    deliverables = Deliverable.objects.\
+        filter(project=project_id).order_by('dueDate')
+
+    # On POST method
+    if request.method == 'POST':
+        # Gather information from form
+        form = AddDeliverableToProjectForm(request.POST)
+        if form.is_valid():
+            # Generate a deliverable and modify content
+            member_designed = ProjectPlannerUser.objects.\
+                get(email=request.user.email)
+            deliverable_added = Deliverable(name=form.data['name'],
+                                            description=form.data['description'],
+                                            dueDate=form.data['dueDate'],
+                                            project=project)
+            deliverable_added.save()
+            contributor_deliverable = ContributorDeliverable(projectPlannerUser=member_designed,
+                                                             deliverable=deliverable_added, )
+            contributor_deliverable.save()
+
+            # Reset field
+            form = AddDeliverableToProjectForm()
+
+            # Message
+            messages.success(request, 'Deliverable added')
+        else:
+            # Message
+            messages.error(request, 'Some fields are not correct.')
+
+    # Initial page call
+    else:
+        # Add a deliverable
+        form = AddDeliverableToProjectForm()
+
+    # Generate a context
+    context = {
+        'project': project,
+        'deliverables': deliverables,
+        'form': form,
+        'user_role': current_user_role.permission
+    }
+
+    return render(request, 'project/projectDeliverablesListing.html', context)
+
+
+def delete_deliverable_view(request, deliverable_id):
+    """
+    Remove a team member from a project.
+    :param request:
+    :param deliverable_id: deliverable id in the table
+    :return:
+    """
+    # Gather information
+    deliverable_to_remove = Deliverable.objects.get(id=deliverable_id)
+    project_id = deliverable_to_remove.project.id
+
+    # Modify content
+    deliverable_to_remove.status = "Deleted"
+
+    # Remove member from contributor list
+    deliverable_to_remove.delete()
+
+    # Email contributor
+    send_notifications_to_contributor(deliverable_to_remove)
+    # Message
+    messages.success(request, 'Deliverable deleted')
+
+    # Go back to homepage
+    return redirect('project:deliverableListing', project_id=project_id)
+
+
+def check_and_release_project_view(request, project_id):
+    """
+    Check if all deliverable are approved and modify the project status
+    accordingly.
+    :param request:
+    :param project_id: id of the project
+    :return:
+    """
+    # Gather information
+    project = Project.objects.get(id=project_id)
+
+    # Check the advancement of the project
+    advancement = define_project_advancement(project_id)
+
+    # If all deliverable finalized
+    if advancement >= 100:
+        project.status = "FINISHED"
+        project.closureDate = timezone.now()
+        project.save()
+
+        # Email contributor
+        send_notifications_to_contributor(project)
+        # Message
+        messages.success(request, 'Project finalized!')
+    else:
+        project.status = 'ON GOING'
+        project.save()
+
+        # Message
+        messages.warning(request, 'Some deliverables are not finalized')
+
+    # Go back to project home page
+    return redirect("project:displayProject", project_id=project_id)

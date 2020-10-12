@@ -1,0 +1,123 @@
+{% extends 'project/base.html' %}
+
+<!-- Load lib -->
+{% load static %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+            <a class="navbar-brand" href="/displayProject/{{project.id }}/">{{ project.name}}</a>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Sections -->
+<div class="content">
+  <div class="container-fluid">
+    <!-- Listing Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <a href="/displayProject/{{project.id }}/">
+              <h4 class="card-title "> Deliverable listing  </h4>
+            </a>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Due date</th>
+                  <th>Status</th>
+                </tr>
+                </thead>
+                <!-- Deliverable details -->
+                {% if deliverables|length_is:"0" %}
+                <!-- no deliverable yet message -->
+                <tbody>
+                <div class="row">
+                  <div class="col-lg-12 text-center">
+                    <p>No deliverable in the project yet </p>
+                  </div>
+                </div>
+                </tbody>
+                {% else %}
+                <!-- Display details-->
+                <tbody>
+                {% for deliverable in deliverables %}
+                <tr>
+                  <!-- Name -->
+                  <td>
+                    <a href="/deliverable/displayDeliverable/{{ deliverable.id }}/">
+                      <p class=""> {{ deliverable.name }} </p>
+                    </a>
+                  </td>
+                  <!-- Description -->
+                  <td> {{ deliverable.description }} </td>
+                  <!-- Due date -->
+                  <td> {{ deliverable.dueDate }} </td>
+                  <!-- Status -->
+                  <td> {{ deliverable.status }} </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                {% endif %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Deliverable Adding Form -->
+    {% if user_role == "Project Manager" or user_role == "Contributor" %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title "> Add a new deliverable </h4>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row d-flex justify-content-around">
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Name</label>
+                    {{ form.name }}
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Description</label>
+                    {{ form.description }}
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Due Date</label>
+                    {{ form.dueDate }}
+                  </div>
+                </div>
+              </div>
+              <div class="row d-flex justify-content-around">
+                <div class="col-md-3">
+                  <button type="submit" class="btn btn-primary">Add it!</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

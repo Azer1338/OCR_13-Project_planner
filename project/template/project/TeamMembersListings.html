@@ -1,0 +1,96 @@
+{% extends 'project/base.html' %}
+<!-- Load lib -->
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+  <div class="container-fluid">
+    <div class="navbar-wrapper">
+      <a class="navbar-brand" href="/displayProject/{{ project.id }}/">{{ project }}</a>
+    </div>
+  </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Sections -->
+<div class="content">
+  <div class="container-fluid">
+    <!-- Listing Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title "> Member listing </h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                <tr>
+                  <th>Name</th>
+                  <th>Team</th>
+                  <th>Role</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <!-- Team members details -->
+                <tbody>
+                {% for member in members %}
+                <tr>
+                  <!-- Name -->
+                  <td> {{ member.projectPlannerUser.name }}</td>
+                  <!-- Team -->
+                  <td> {{ member.projectPlannerUser.team }} </td>
+                  <!-- Role -->
+                  <td> {{ member.permission }} </td>
+                  <!-- Action button -->
+                  <td>
+                    {% if user_role == "Project Manager" and not member.permission == "Project Manager"  %}
+                    <a class="btn btn-primary" href="/deleteTeamMember/{{ member.id }}/">Remove</a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Deliverable Adding Form -->
+    {% if user_role == "Project Manager" %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title "> Add a new contributor </h4>
+          </div>
+          <div class="card-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="row d-flex justify-content-around">
+                <div class="col-md-3 d-flex justify-content-around">
+                  <div class="form-group">
+                    {{ form|crispy }}
+                  </div>
+                </div>
+              </div>
+              <div class="row d-flex justify-content-around">
+                <div class="col-md-3 d-flex justify-content-around">
+                  <button type="submit" class="btn btn-primary ">Add it!</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

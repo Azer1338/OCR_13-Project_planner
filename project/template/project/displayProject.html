@@ -1,0 +1,128 @@
+{% extends 'project/base.html' %}
+
+<!-- Load lib -->
+{% load static %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+            <a class="navbar-brand" href="/displayProject/{{project.id }}/">{{ project.name}}</a>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Project Header card -->
+<div class="content">
+    <div class="container-fluid">
+        <!-- General Info -->
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title "> Overview</h4>
+            </div>
+            <div class="card-body">
+                <!-- Details -->
+                <div class="row d-flex justify-content-around">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header card-header-warning card-header-icon">
+                                <div class="card-icon">
+                                    <i class="material-icons">school</i>
+                                </div>
+                                <p class="card-category">Status</p>
+                                <h3 class="card-title">
+                                    {{ project.status}}
+                                    <p class="card-category">Due date: {{ project.dueDate}}</p>
+                                </h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons text-danger">local_offer</i>
+                                    <p>{{ project.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header card-header-warning card-header-icon">
+                                <div class="card-icon">
+                                    <i class="material-icons">add_task</i>
+                                </div>
+                                <p class="card-category">Progres.</p>
+                                <h3 class="card-title">
+                                    {{ project.advancement}}%
+                                    <p class="card-category">
+                                        deliverable approved
+                                    </p>
+                                </h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons text-danger">local_offer</i>
+                                    <a href="/deliverableListing/{{ project.id }}/">See deliverable...</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <div class="card card-stats">
+                            <div class="card-header card-header-warning card-header-icon">
+                                <div class="card-icon">
+                                    <i class="material-icons">group</i>
+                                </div>
+                                <p class="card-category">Team</p>
+                                <h3 class="card-title">
+                                    {{ contributors_length }}
+                                    <p class="card-category">
+                                        Contributor
+                                    </p>
+                                </h3>
+                            </div>
+                            <div class="card-footer">
+                                <div class="stats">
+                                    <i class="material-icons text-danger">local_offer</i>
+                                    <a href="/teamMembersListing/{{ project.id }}/">See members...</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Restricted actions -->
+        {% if user_function == "Project Manager"%}
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Permission</h4>
+            </div>
+            <div class="card-body">
+                <!-- Actions -->
+                <div class="row d-flex justify-content-around">
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a class="btn btn-primary btn-round" href="/checkAndReleaseProject/{{ project.id }}/">
+                            Release it!
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a class="btn btn-primary" href="/modifyProject/{{ project.id }}/">
+                            Modify it
+                        </a>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6">
+                        <a class="btn btn-primary btn-round" href="/deleteProject/{{ project.id }}/">
+                            Remove it.
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

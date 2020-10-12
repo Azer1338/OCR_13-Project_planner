@@ -1,0 +1,115 @@
+{% extends 'project/base.html' %}
+
+<!-- Load lib -->
+{% load static %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+  <div class="container-fluid">
+    <div class="navbar-wrapper">
+      <p class="navbar-brand">
+        Every projects deserves a better approach...
+      </p>
+    </div>
+  </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Header -->
+<div class="content">
+  <!-- Project Planner -->
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h3 class="card-title">Project Planner</h3>
+        <p class="card-category">
+          Project Planner suits perfectly with all collaboration tasks!
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-12">
+            <img class="card-img" src="{% static 'project/img/cover.jpg' %}">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Services -->
+  <div class="card">
+    <div class="card-header card-header-primary">
+      <h3 class="card-title">Services</h3>
+      <p class="card-category">
+        What We Offer
+      </p>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-info card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons">preview</i>
+              </div>
+              <p class="card-category">Overview</p>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <h3 > Share projects and deliberates status </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-danger card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons">timeline</i>
+              </div>
+              <p class="card-category">Manage</p>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <h3 > Add deliverables and project members </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons">build</i>
+              </div>
+              <p class="card-category">Empower</p>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <h3 > Let contributor take the control </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+              <div class="card-icon">
+                <i class="material-icons">bedtime</i>
+              </div>
+              <p class="card-category">Tranquility</p>
+            </div>
+            <div class="card-footer">
+              <div class="stats">
+                <h3 > Close project with consistency </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% endblock %}
