@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from account.models import ProjectPlannerUser
@@ -57,10 +58,6 @@ class MyUserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
-
-
-class BaseUserAdmin(object):
-    pass
 
 
 class MyUserAdmin(BaseUserAdmin):

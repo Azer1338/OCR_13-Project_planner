@@ -1,13 +1,15 @@
 import datetime
-
 from django.test import TestCase, Client
-from accounts import ProjectPlannerUser
-from deliverable import Deliverable, Document, ContributorDeliverable
-from project.function_for_project import contributor_is_not_already_in_the_list, define_project_advancement
-from project.models import Project, ContributorProject
+
 
 
 #  index_view Page#
+from account.models import ProjectPlannerUser
+from document.models import Document
+from project.function_for_project import contributor_is_not_already_in_the_list, define_project_advancement
+from project.models import Project, Deliverable, ContributorProject
+
+
 class IndexViewTestCase(TestCase):
 
     def test_index_page_call(self):

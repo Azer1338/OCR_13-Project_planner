@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 
-from accounts.function_for_accounts import send_notifications_to_contributor
-from accounts.models import ProjectPlannerUser
-from deliverable.models import Deliverable
-from .forms import CreateProjectForm, AddMemberToProjectForm,\
-    AddDeliverableToProjectForm, ModifyProjectForm
-from .function_for_project import contributor_is_not_already_in_the_list, \
-    define_project_advancement
-from .models import Project, ContributorProject
+from account.function_for_accounts import send_notifications_to_contributor
+from account.models import ProjectPlannerUser
+from document.models import Document
+from project.forms import CreateProjectForm, ModifyProjectForm, AddMemberToProjectForm, AddDeliverableToProjectForm, \
+    AddContributorToDeliverableForm, UpdateContributorComment, ModifyDeliverableContentForm
+from project.function_for_project import define_project_advancement, contributor_is_not_already_in_the_list, \
+    define_deliverable_progression
+from project.models import Project, Deliverable, ContributorProject, ContributorDeliverable
 
 
 def index_view(request):

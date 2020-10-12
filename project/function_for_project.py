@@ -1,7 +1,6 @@
 # Some functions to support the apps
-from deliverable.models import Deliverable, ContributorDeliverable
-from deliverable.models import Deliverable
-from project.models import Project
+from project.models import ContributorDeliverable, Deliverable, Project
+
 
 def define_deliverable_progression(deliverable_id):
     """
@@ -29,8 +28,6 @@ def define_deliverable_progression(deliverable_id):
     deliverable.save()
 
     return progression
-
-
 
 
 def contributor_is_not_already_in_the_list(contributor, listing):

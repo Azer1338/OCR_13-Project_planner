@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from account.models import ProjectPlannerUser
+
 
 class Project(models.Model):
     # Choices
@@ -22,7 +24,7 @@ class Project(models.Model):
     description = models.CharField(max_length=150, unique=False,
                                    default="No description yet")
     # Many Project to many ProjectPlannerUser relationship
-    contributor = models.ManyToManyField('accounts.ProjectPlannerUser',
+    contributor = models.ManyToManyField('account.ProjectPlannerUser',
                                          through='ContributorProject',
                                          through_fields=('project',
                                                          'projectPlannerUser')
@@ -44,9 +46,8 @@ class ContributorProject(models.Model):
                                   default='Project Manager')
     # Many Project to many ProjectPlannerUser relationship
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    projectPlannerUser = models.ForeignKey('accounts.ProjectPlannerUser',
+    projectPlannerUser = models.ForeignKey('account.ProjectPlannerUser',
                                            on_delete=models.CASCADE)
-
 
 
 class Deliverable(models.Model):
@@ -100,7 +101,7 @@ class ContributorDeliverable(models.Model):
     deliverable = models.ForeignKey(Deliverable,
                                     related_name='contributor_deliverable',
                                     on_delete=models.CASCADE)
-    projectPlannerUser = models.ForeignKey(ProjectPlannerUser,
+    projectPlannerUser = models.ForeignKey('account.ProjectPlannerUser',
                                            related_name='contributor_deliverable',
                                            on_delete=models.CASCADE)
 

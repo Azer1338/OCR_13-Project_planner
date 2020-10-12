@@ -1,7 +1,6 @@
 from django import forms
 
-from deliverable.models import Deliverable
-from .models import Project, ContributorProject
+from project.models import Project, ContributorProject, Deliverable, ContributorDeliverable
 
 
 class CreateProjectForm(forms.ModelForm):
