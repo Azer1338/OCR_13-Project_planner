@@ -1,0 +1,278 @@
+{% extends 'project/base.html' %}
+
+<!-- Load lib -->
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+  <div class="container-fluid">
+    <div class="navbar-wrapper">
+      <a class="navbar-brand" href="/deliverableListing/{{project.id }}/">{{ project.name}}</a>
+    </div>
+  </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Sections -->
+<div class="content">
+  <div class="container-fluid">
+    <!-- General Info -->
+    <div class="card">
+      <div class="card-header card-header-primary">
+        <h4 class="card-title">{{ deliverable.name}}</h4>
+      </div>
+      <div class="card-body">
+        <!-- Details -->
+        <div class="row d-flex justify-content-around">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">Status</p>
+                <h3 class="card-title">
+                  {{ deliverable.status}}
+                  <p class="card-category">Due date: {{ deliverable.dueDate }}</p>
+                </h3>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <i class="material-icons text-danger">local_offer</i>
+                  <a>{{ deliverable.description }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">Progres.</p>
+                <h3 class="card-title">
+                  {{ deliverable.progression}}%
+                  <p class="card-category"> Agreement </p>
+                </h3>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <i class="material-icons text-danger">local_offer</i>
+                  <a href="#ContributorList">See details...</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card card-stats">
+              <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                  <i class="material-icons">content_copy</i>
+                </div>
+                <p class="card-category">Team</p>
+                <h3 class="card-title">
+                  {{ contributors_length }}
+                  <p class="card-category">
+                    Contributor
+                  </p>
+                </h3>
+              </div>
+              <div class="card-footer">
+                <div class="stats">
+                  <i class="material-icons text-danger">local_offer</i>
+                  <a href="#ContributorList">See details...</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Document Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <a href="/displayProject/{{project.id }}/">
+            </a>
+            <p class="card-category"> Deliverable listing </p>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                <tr>
+                  <th>Name</th>
+                  <th>Adding date</th>
+                  <th>Link</th>
+                </tr>
+                </thead>
+                <!-- Document details -->
+                {% if documents|length_is:"0" %}
+                <!-- no deliverable yet message -->
+                <tbody>
+                <tr>
+                  <!-- Message -->
+                  <td> No documents in the deliverable yet</td>
+                </tr>
+                </tbody>
+                {% else %}
+                <tbody>
+                {% for document in documents %}
+                <tr>
+                  <!-- Name -->
+                  <td> {{ document.name }} </td>
+                  <!-- Adding date -->
+                  <td> {{ document.loadingDate }} </td>
+                  <!-- Link -->
+                  <td>
+                    <a href="{{ document.link.url }}"> {{ document.link }} </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                {% endif %}
+              </table>
+            </div>
+            <!-- Add doc button -->
+            <div class="row">
+              <div class="col-lg-4 mx-auto">
+                <a class="btn btn-primary btn-xl" href="/deliverable/addDocumentToDeliverable/{{deliverable.id }}/">
+                  Add a Document
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Contributor Section -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <a href="/displayProject/{{project.id }}/">
+            </a>
+            <p class="card-category" id="ContributorList"> Contributor listing </p>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead class=" text-primary">
+                <tr>
+                  <th>Name</th>
+                  <th>Team</th>
+                  <th>Function</th>
+                  <th>Feedback</th>
+                  <th>Comment</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <!-- Contributor details -->
+                <tbody>
+                {% for contributor in contributors %}
+                <form method="POST" action="/deliverable/updateContributionToDeliverable/{{ contributor.id }}/">
+                  {% csrf_token %}
+                  <tr>
+                    <!-- Name -->
+                    <td> {{ contributor.projectPlannerUser.name }}  </td>
+                    <!-- Team -->
+                    <td> {{ contributor.projectPlannerUser.team }} </td>
+                    <!-- Function -->
+                    <td> {{ contributor.function }} </td>
+
+                    <!-- Contributor display -->
+                    {% if current_user == contributor and user_function != "COLLABORATOR" %}
+                    <!-- Feedback -->
+                    <td> {{ updateContributorForm.feedback }}  </td>
+                    <!-- Comment -->
+                    <td>
+                      <input type="text" name="contributorComment" value="{{ contributor.comment }}">
+                    </td>
+                    <!-- Action button -->
+                    <td>
+                      <input class="btn btn-primary" type="submit" value="Update">
+                    </td>
+
+                    <!-- Not the Contributor display -->
+                    {% else %}
+                    <!-- Feedback -->
+                    <td> {{ contributor.feedback }} </td>
+                    <!-- Comment -->
+                    <td> {{ contributor.comment }} </td>
+                    <!-- Action button -->
+                    {% if user_function == "Author" and not contributor.function == "Author" %}
+                    <td>
+                      <a class="btn btn-primary" href="/deliverable/removeContributorFromDeliverable/{{ contributor.id }}/">
+                        Remove
+                      </a>
+                    </td>
+                    {% endif %}
+                    {% endif %}
+                  </tr>
+                </form>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <!-- Add Contributor-->
+            {% if user_function == "Author"%}
+            <div class="row">
+              <div class="col-md-12">
+                <form method="POST" action="/deliverable/addContributorToDeliverable/{{ deliverable.id }}/">
+                  {% csrf_token %}
+                  {{ addContributorForm|crispy }}
+                  <div class="row d-flex justify-content-around">
+                    <div class="col-md-3">
+                      <button type="submit" class="btn btn-primary">Add it!</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Restricted Actions -->
+  {% if user_function == "Author"%}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title "> Add a new deliverable </h4>
+        </div>
+        <div class="card-body">
+          <div class="row d-flex justify-content-around">
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/deliverable/checkAndReleaseDeliverable/{{ deliverable.id }}/">
+                Release it!
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/deliverable/modifyDeliverable/{{ deliverable.id }}/">
+                Modify it
+              </a>
+            </div>
+            <div class="col-md-3">
+              <a class="btn btn-primary" href="/deleteDeliverable/{{ deliverable.id }}/">
+                Remove it.
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+</div>
+
+
+{% endblock %}
