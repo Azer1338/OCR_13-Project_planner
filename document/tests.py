@@ -5,7 +5,7 @@ from django.test import TestCase, Client
 
 
 # display_deliverable_view Page
-from account.models import ProjectPlannerUser
+from accounts.models import ProjectPlannerUser
 from document.models import Document
 from project.function_for_project import define_deliverable_progression
 from project.models import Project, Deliverable, ContributorDeliverable

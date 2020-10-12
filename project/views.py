@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
 
-from account.function_for_accounts import send_notifications_to_contributor
-from account.models import ProjectPlannerUser
+from accounts.function_for_accounts import send_notifications_to_contributor
+from accounts.models import ProjectPlannerUser
 from document.models import Document
 from project.forms import CreateProjectForm, ModifyProjectForm, AddMemberToProjectForm, AddDeliverableToProjectForm, \
     AddContributorToDeliverableForm, UpdateContributorComment, ModifyDeliverableContentForm

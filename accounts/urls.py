@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
-app_name = 'account'
+app_name = 'accounts'
 
 urlpatterns = [
     url(r'^signUp/$', views.sign_up_view, name="signUp"),

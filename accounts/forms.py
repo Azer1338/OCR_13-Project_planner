@@ -1,6 +1,6 @@
 from django import forms
 
-from account.models import ProjectPlannerUser
+from accounts.models import ProjectPlannerUser
 
 
 class RegisterForm(forms.ModelForm):

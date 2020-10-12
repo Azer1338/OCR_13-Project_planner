@@ -52,6 +52,7 @@ class AddContributorToDeliverableForm(forms.ModelForm):
             'projectPlannerUser': 'New contributor email'
         }
 
+
 class UpdateContributorComment(forms.ModelForm):
     class Meta:
         model = ContributorDeliverable
@@ -59,6 +60,7 @@ class UpdateContributorComment(forms.ModelForm):
             'feedback',
             'comment',
         ]
+
 
 class ModifyDeliverableContentForm(forms.ModelForm):
     class Meta:

@@ -45,14 +45,14 @@ else:
 
 
 # Application definition
-AUTH_USER_MODEL = 'account.ProjectPlannerUser'
+AUTH_USER_MODEL = 'accounts.ProjectPlannerUser'
 
 
 # Application definition
 INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'document.apps.DocumentConfig',
-    'account.apps.AccountConfig',
+    'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
