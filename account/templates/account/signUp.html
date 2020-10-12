@@ -1,0 +1,49 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+            <a class="navbar-brand" href="/displayProject/{{project.id }}/">
+                Every projects deserves a better approach...
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Sign Up Section -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Sign Up</h4>
+                        <p class="card-category">Complete the registration</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row d-flex justify-content-around">
+                            <div class="col-md-4">
+                                <form class="site-form" action="/accounts/signUp/" method="post">
+                                    <!-- Token -->
+                                    {% csrf_token %}
+                                    {{ form|crispy }}
+                                    <div class="row d-flex justify-content-around">
+                                        <div class="col-md-4">
+                                            <input class="btn btn-primary" type="submit" value="Sign up!">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

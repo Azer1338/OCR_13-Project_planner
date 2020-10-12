@@ -1,0 +1,130 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute">
+    <div class="container-fluid">
+        <div class="navbar-wrapper">
+            <a class="navbar-brand" href="/displayProject/{{project.id }}/">
+                Every projects deserves a better approach...
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<!-- Sections -->
+<div class="content">
+    <div class="container-fluid">
+        <!-- Project Section -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">Project </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <th>Name</th>
+                                <th>Advancement</th>
+                                <th>Due date</th>
+                                <th>Status</th>
+                                </thead>
+                                {% if projects|length_is:"0" %}
+                                <!-- no-project-yet message -->
+                                <tbody>
+                                <tr>
+                                    <td> No project in the basket yet </td>
+                                </tr>
+                                </tbody>
+                                {% else %}
+                                <!-- Display details-->
+                                <tbody>
+                                {% for project in projects %}
+                                <tr>
+                                    <!-- Project name -->
+                                    <td>
+                                        <a href="/displayProject/{{ project.project.id }}/">
+                                            <p> {{ project.project.name }} </p>
+                                        </a>
+                                    </td>
+                                    <!-- Actions remained -->
+                                    <td> {{ project.project.advancement }} </td>
+                                    <!-- Due Date -->
+                                    <td> {{ project.project.dueDate }} </td>
+                                    <!-- Status -->
+                                    <td> {{ project.project.status }} </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Deliverable Section -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title "> Deliverable </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Related to</th>
+                                    <th>Status</th>
+                                    <th>Due date</th>
+                                    <th>Opinion</th>
+                                    <th>Comments</th>
+                                </tr>
+                                </thead>
+                                {% if deliverables|length_is:"0" %}
+                                <tbody>
+                                <tr>
+                                    <td> No deliverables in the basket yet </td>
+                                </tr>
+                                </tbody><!-- no-project-yet message -->
+                                {% else %}
+                                <!-- Display details-->
+                                <tbody>
+                                {% for deliverable in deliverables %}
+                                <tr>
+                                    <!-- Deliverable name -->
+                                    <td>
+                                        <a href="/deliverable/displayDeliverable/{{ deliverable.deliverable.id }}/">
+                                            <p class=""> {{ deliverable.deliverable.name }} </p>
+                                        </a>
+                                    </td>
+                                    <!-- Related to -->
+                                    <td> {{ deliverable.deliverable.project.name }}</td>
+                                    <!-- Status -->
+                                    <td> {{ deliverable.deliverable.status }} </td>
+                                    <!-- Due date -->
+                                    <td> {{ deliverable.deliverable.dueDate }} </td>
+                                    <!-- Feedback -->
+                                    <td> {{ deliverable.deliverable.feedback }} </td>
+                                    <!-- Comment -->
+                                    <td> {{ deliverable.deliverable.comment }} </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                                {% endif %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

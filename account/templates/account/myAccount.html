@@ -1,0 +1,30 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+
+<!-- Account Section -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-around">
+            <div class="col-md-4">
+                <div class="card card-profile">
+                    <div class="card-avatar">
+                        <a href="javascript:;">
+                            <img class="img" src="{% static 'project/img/faces/marc.jpg' %}"
+                                 onclick="displayNotification('top','right','Yes, this is my pic!')"/>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-category text-gray">{{ user.team }}</h6>
+                        <h4 class="card-title">{{ user.first_name }}, {{ user.name }}</h4>
+                        <p class="card-description">
+                            {{ user.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

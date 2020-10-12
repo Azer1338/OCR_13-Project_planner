@@ -1,15 +1,32 @@
 from django.conf.urls import url
 
 from . import views
-# import views so we can use them in urls.py.
+
 
 app_name = 'document'
 
 urlpatterns = [
-    # url(r'^signUp/$', views.sign_up_view, name="signUp"),
-    # url(r'^logIn/$', views.log_in_view, name="logIn"),
-    # url(r'^logOut/$', views.log_out_view, name="logOut"),
-    # url(r'^myAccount/$', views.my_account_view, name="myAccount"),
-    # url(r'^myContribution/$', views.my_contribution_view,
-    #     name="myContribution"),
+    url(r'^displayDeliverable/(?P<deliverable_id>[0-9]+)/$',
+        views.display_deliverable_view, name="displayDeliverable"),
+    url(r'^modifyDeliverable/(?P<deliverable_id>[0-9]+)/$',
+        views.modify_deliverable_view, name="modifyDeliverable"),
+
+    url(r'^addDocumentToDeliverable/(?P<deliverable_id>[0-9]+)/$',
+        views.add_document_to_deliverable_view,
+        name="addDocumentToDeliverable"),
+
+    url(r'^addContributorToDeliverable/(?P<deliverable_id>[0-9]+)/$',
+        views.add_contributor_to_deliverable_view,
+        name="addContributorToDeliverable"),
+    url(r'^removeContributorFromDeliverable/(?P<member_id>[0-9]+)/$',
+        views.remove_contributor_from_deliverable_view,
+        name="removeContributorFromDeliverable"),
+
+    url(r'^updateContributionToDeliverable/(?P<contributor_id>[0-9]+)/$',
+        views.update_contribution_feedback_to_deliverable_view,
+        name="updateContributionToDeliverable"),
+
+    url(r'^checkAndReleaseDeliverable/(?P<deliverable_id>[0-9]+)/$',
+        views.check_and_release_deliverable_view,
+        name="checkAndReleaseDeliverable"),
 ]

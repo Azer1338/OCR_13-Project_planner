@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 
-from deliverable.models import ContributorDeliverable
+from document.models import ContributorDeliverable
 from project.models import ContributorProject
 from .admin import ProjectPlannerUserCreationForm
 
