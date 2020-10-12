@@ -41,3 +41,30 @@ class ModifyProjectForm(forms.ModelForm):
             'description',
             'dueDate'
         ]
+
+class AddContributorToDeliverableForm(forms.ModelForm):
+    class Meta:
+        model = ContributorDeliverable
+        fields = [
+            'projectPlannerUser',
+            'function'
+        ]
+        labels = {
+            'projectPlannerUser': 'New contributor email'
+        }
+
+class UpdateContributorComment(forms.ModelForm):
+    class Meta:
+        model = ContributorDeliverable
+        fields = [
+            'feedback',
+            'comment',
+        ]
+
+class ModifyDeliverableContentForm(forms.ModelForm):
+    class Meta:
+        model = Deliverable
+        fields = [
+            'description',
+            'dueDate'
+        ]

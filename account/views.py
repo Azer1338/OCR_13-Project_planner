@@ -6,9 +6,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 
-from document.models import ContributorDeliverable
-from project.models import ContributorProject
-from .admin import ProjectPlannerUserCreationForm
+from account.admin import ProjectPlannerUserCreationForm
+from project.models import ContributorProject, ContributorDeliverable
 
 
 @login_required(login_url="/accounts/logIn/")

@@ -1,8 +1,7 @@
 # Some functions to support the code
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 
-from deliverable.models import Deliverable
-from project.models import Project
+from project.models import Deliverable, Project
 
 
 def send_notifications_to_contributor(event_from):

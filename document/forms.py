@@ -1,7 +1,7 @@
 from cloudinary.forms import CloudinaryFileField
 from django import forms
 
-from .models import ContributorDeliverable, Document, Deliverable
+from document.models import Document
 
 
 class AddDocumentToDeliverableForm(forms.ModelForm):
@@ -20,34 +20,4 @@ class AddDocumentToDeliverableForm(forms.ModelForm):
             'name',
             'deliverable',
             'link'
-        ]
-
-
-class AddContributorToDeliverableForm(forms.ModelForm):
-    class Meta:
-        model = ContributorDeliverable
-        fields = [
-            'projectPlannerUser',
-            'function'
-        ]
-        labels = {
-            'projectPlannerUser': 'New contributor email'
-        }
-
-
-class UpdateContributorComment(forms.ModelForm):
-    class Meta:
-        model = ContributorDeliverable
-        fields = [
-            'feedback',
-            'comment',
-        ]
-
-
-class ModifyDeliverableContentForm(forms.ModelForm):
-    class Meta:
-        model = Deliverable
-        fields = [
-            'description',
-            'dueDate'
         ]
