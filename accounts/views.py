@@ -10,7 +10,7 @@ from accounts.admin import ProjectPlannerUserCreationForm
 from project.models import ContributorProject, ContributorDeliverable
 
 
-@login_required(login_url="/account/logIn/")
+@login_required(login_url="/accounts/logIn/")
 def my_account_view(request):
     """
     Display user's information.
@@ -18,10 +18,10 @@ def my_account_view(request):
     :return:
     """
 
-    return render(request, 'account/myAccount.html')
+    return render(request, 'accounts/myAccount.html')
 
 
-@login_required(login_url="/account/logIn/")
+@login_required(login_url="/accounts/logIn/")
 def my_contribution_view(request):
     """
     Display user's information.
@@ -41,7 +41,7 @@ def my_contribution_view(request):
         'deliverables': deliverables,
     }
 
-    return render(request, 'account/myContribution.html', context)
+    return render(request, 'accounts/myContribution.html', context)
 
 
 def sign_up_view(request):
@@ -72,7 +72,7 @@ def sign_up_view(request):
         'form': form
     }
 
-    return render(request, 'account/signUp.html', context)
+    return render(request, 'accounts/signUp.html', context)
 
 
 def log_in_view(request):
@@ -101,10 +101,10 @@ def log_in_view(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'account/logIn.html', {'form': form})
+    return render(request, 'accounts/logIn.html', {'form': form})
 
 
-@login_required(login_url="/account/logIn/")
+@login_required(login_url="/accounts/logIn/")
 def log_out_view(request):
     logout(request)
     template = loader.get_template('project/index.html')

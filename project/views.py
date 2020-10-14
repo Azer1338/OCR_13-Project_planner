@@ -244,7 +244,7 @@ def team_members_listing_view(request, project_id):
         'user_role': current_user_role.permission
     }
 
-    return render(request, 'project/projectTeamMembersListing.html', context)
+    return render(request, 'project/teamMembersListing.html', context)
 
 
 def delete_team_member_view(request, member_id):
@@ -322,7 +322,7 @@ def deliverable_listing_view(request, project_id):
         'user_role': current_user_role.permission
     }
 
-    return render(request, 'project/projectDeliverablesListing.html', context)
+    return render(request, 'project/deliverablesListing.html', context)
 
 
 def delete_deliverable_view(request, deliverable_id):
@@ -384,6 +384,7 @@ def check_and_release_project_view(request, project_id):
 
     # Go back to project home page
     return redirect("project:displayProject", project_id=project_id)
+
 
 def display_deliverable_view(request, deliverable_id):
     """

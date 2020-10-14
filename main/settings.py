@@ -16,6 +16,8 @@ import environs
 
 
 # Set up Environs lib
+from django.contrib import messages
+
 env = environs.Env()
 env.read_env()
 
@@ -61,7 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'crispy_forms',
-    'cloudinary'
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -140,6 +142,19 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Message formatting
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+ }
+
+# Mailgun API details
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = os.environ.get('MAILGUN_ACCESS_KEY')
+MAILGUN_SERVER_NAME = os.environ.get('MAILGUN_SERVER_NAME')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
