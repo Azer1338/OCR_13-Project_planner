@@ -1163,7 +1163,7 @@ class CheckAndReleaseDeliverableViewTestCase(TestCase):
                    deliverable=deliverable)
         document.save()
 
-    def test_check_and_release_project_view_page(self):
+    def test_check_and_release_deliverable_view_page(self):
         """Check the check and release a project.
         """
         # Generate a fake user

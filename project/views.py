@@ -1,3 +1,6 @@
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
@@ -10,6 +13,7 @@ from project.forms import CreateProjectForm, ModifyProjectForm, AddMemberToProje
 from project.function_for_project import define_project_advancement, contributor_is_not_already_in_the_list, \
     define_deliverable_progression
 from project.models import Project, Deliverable, ContributorProject, ContributorDeliverable
+from main.settings import env
 
 
 def index_view(request):
@@ -611,6 +615,14 @@ def check_and_release_deliverable_view(request, deliverable_id):
     """
     # Gather information
     deliverable = Deliverable.objects.get(id=deliverable_id)
+
+    # API config
+    cloudinary.config(
+        cloud_name=env.str('CLOUDINARY_CONFIG_CLOUD_NAME'),
+        api_key=env.str('CLOUDINARY_CONFIG_API_KEY'),
+        api_secret=env.str('CLOUDINARY_CONFIG_API_SECRET'),
+        secure=True
+    )
 
     # Check the progression of the deliverable
     progression = define_deliverable_progression(deliverable_id)
