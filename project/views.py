@@ -474,7 +474,7 @@ def modify_deliverable_view(request, deliverable_id):
             messages.success(request, 'Deliverable modified!')
 
             # Redirect to the project main page
-            return redirect('deliverable:displayDeliverable',
+            return redirect('project:displayDeliverable',
                             deliverable_id=deliverable.id)
         else:
             # Message
@@ -545,7 +545,7 @@ def add_contributor_to_deliverable_view(request, deliverable_id):
         pass
 
     # Redirect to homepage
-    return redirect('deliverable:displayDeliverable',
+    return redirect('project:displayDeliverable',
                     deliverable_id=deliverable.id)
 
 
@@ -567,7 +567,7 @@ def remove_contributor_from_deliverable_view(request, member_id):
     messages.success(request, 'Contributor removed!')
 
     # Redirect to homepage
-    return redirect('deliverable:displayDeliverable',
+    return redirect('project:displayDeliverable',
                     deliverable_id=deliverable_id)
 
 
@@ -598,7 +598,7 @@ def update_contribution_feedback_to_deliverable_view(request, contributor_id):
         messages.warning(request, 'Some fields are not correct!')
 
     # Redirect to homepage
-    return redirect('deliverable:displayDeliverable',
+    return redirect('project:displayDeliverable',
                     deliverable_id=contributor.deliverable.id)
 
 
@@ -629,5 +629,5 @@ def check_and_release_deliverable_view(request, deliverable_id):
         deliverable.status = 'APPROVAL ON GOING'
         deliverable.save()
 
-    return redirect("deliverable:displayDeliverable",
+    return redirect("project:displayDeliverable",
                     deliverable_id=deliverable_id)

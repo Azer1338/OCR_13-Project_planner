@@ -45,7 +45,7 @@ def add_document_to_deliverable_view(request, deliverable_id):
             messages.success(request, 'Document added!')
 
             # Go to the deliverable homepage
-            return redirect('deliverable:displayDeliverable',
+            return redirect('project:displayDeliverable',
                             deliverable_id=deliverable.id)
         else:
             # Message
