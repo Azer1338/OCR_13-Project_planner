@@ -447,16 +447,19 @@ class DeleteTeamMemberViewTestCase(TestCase):
         c.login(email="test_man@itest.com", password="Chanson")
         # Gather info
         project = Project.objects.get(name="TEST TEAM LISTING PROJECT")
-        contributor_initial_list_length = len(ContributorProject.objects.filter(project=project))
+        contributor_initial_list_length = len(ContributorProject.objects.
+                                              filter(project=project))
         user2 = ProjectPlannerUser.objects.get(name='Berger')
-        contributor_to_remove = ContributorProject.objects.get(projectPlannerUser=user2)
+        contributor_to_remove = ContributorProject.objects.get(
+            projectPlannerUser=user2)
 
         # Generate an url call
         url = '/deleteTeamMember/' + str(contributor_to_remove.id) + '/'
         response = c.get(url)
         # Reload
         project = Project.objects.get(name="TEST TEAM LISTING PROJECT")
-        contributor_final_list_length = len(ContributorProject.objects.filter(project=project))
+        contributor_final_list_length = len(ContributorProject.objects.
+                                            filter(project=project))
 
         # Check the return message
         url2 = '/teamMembersListing/' + str(project.id) + '/'
@@ -572,8 +575,10 @@ class DeleteDeliverableViewTestCase(TestCase):
         deliverable.contributor.add(test_user)
         deliverable.save()
         # Generate document
-        document = Document.objects.create(name="TEST DELIVERABLE LISTING DOCUMENT", link="TEST LINK",
-                                           deliverable=deliverable)
+        document = Document.objects.create(
+            name="TEST DELIVERABLE LISTING DOCUMENT",
+            link="TEST LINK",
+            deliverable=deliverable)
         document.save()
 
     def test_delete_deliverable_page(self):
@@ -590,7 +595,8 @@ class DeleteDeliverableViewTestCase(TestCase):
         url2 = '/deliverableListing/' + str(project.id) + '/'
 
         # Check if the deliverable is still existing
-        deliverable_list = Deliverable.objects.filter(name="TEST DELETE DELIVERABLE")
+        deliverable_list = Deliverable.objects.filter(
+            name="TEST DELETE DELIVERABLE")
 
         # Check the return message
         self.assertRedirects(response, url2, status_code=302)
@@ -630,8 +636,10 @@ class CheckAndReleaseProjectViewTestCase(TestCase):
         deliverable.status = "APPROVED"
         deliverable.save()
         # Generate document
-        document = Document.objects.create(name="TEST DELIVERABLE LISTING DOCUMENT", link="TEST LINK",
-                                           deliverable=deliverable)
+        document = Document.objects.create(
+            name="TEST DELIVERABLE LISTING DOCUMENT",
+            link="TEST LINK",
+            deliverable=deliverable)
         document.save()
 
     def test_check_and_release_project_view_page(self):
@@ -922,7 +930,7 @@ class AddContributorToDeliverableViewTestCase(TestCase):
         c = Client()
         c.login(email="test_man@itest.com", password="Chanson")
         # Generate a dynamic url
-        deliverable = Deliverable.objects.\
+        deliverable = Deliverable.objects. \
             get(name="TEST ADD CONTRIBUTOR DELIVERABLE")
         url = '/addContributorToDeliverable/' + \
               str(deliverable.id) + '/'
@@ -1234,8 +1242,10 @@ class ContributorIsNotAlreadyInTheListFunctionTestCase(TestCase):
         deliverable.status = "APPROVED"
         deliverable.save()
         # Generate document
-        document = Document.objects.create(name="TEST DELIVERABLE LISTING DOCUMENT", link="TEST LINK",
-                                           deliverable=deliverable)
+        document = Document.objects.create(
+            name="TEST DELIVERABLE LISTING DOCUMENT",
+            link="TEST LINK",
+            deliverable=deliverable)
         document.save()
 
     def test_contributor_is_not_already_in_the_list(self):
@@ -1254,8 +1264,10 @@ class ContributorIsNotAlreadyInTheListFunctionTestCase(TestCase):
             contributor_list.append(contributor.projectPlannerUser.email)
 
         # Function call
-        already_in_the_list = contributor_is_not_already_in_the_list(user_in_the_list, contributor_list)
-        not_in_the_list = contributor_is_not_already_in_the_list(user_not_in_the_list, contributor_list)
+        already_in_the_list = contributor_is_not_already_in_the_list(user_in_the_list,
+                                                                     contributor_list)
+        not_in_the_list = contributor_is_not_already_in_the_list(user_not_in_the_list,
+                                                                 contributor_list)
 
         # Check the return message
         self.assertTrue(already_in_the_list)
@@ -1293,9 +1305,10 @@ class DefineProjectAdvancementFunctionTestCase(TestCase):
         project2.contributor.add(test_user2)
         project2.save()
         # Generate deliverable
-        deliverable = Deliverable.objects.create(name="TEST CHECK N RELEASE DELIVERABLE",
-                                                 description="TEST DELIVERABLE LISTING DELIVERABLE DESCRIPTION",
-                                                 project=project, )
+        deliverable = Deliverable.objects.create(
+            name="TEST CHECK N RELEASE DELIVERABLE",
+            description="TEST DELIVERABLE LISTING DELIVERABLE DESCRIPTION",
+            project=project, )
         deliverable.contributor.add(test_user)
         deliverable.status = "APPROVED"
         deliverable.save()
@@ -1305,8 +1318,10 @@ class DefineProjectAdvancementFunctionTestCase(TestCase):
         deliverable2.contributor.add(test_user)
         deliverable2.save()
         # Generate document
-        document = Document.objects.create(name="TEST DELIVERABLE LISTING DOCUMENT", link="TEST LINK",
-                                           deliverable=deliverable)
+        document = Document.objects.create(
+            name="TEST DELIVERABLE LISTING DOCUMENT",
+            link="TEST LINK",
+            deliverable=deliverable)
         document.save()
 
     def test_define_project_advancement(self):
@@ -1347,14 +1362,17 @@ class ProjectTest(TestCase):
         project.contributor.add(test_user)
         project.save()
         # Generate deliverable
-        deliverable = Deliverable.objects.create(name="TEST PROJECT MODEL DELIVERABLE",
-                                                 description="TEST PROJECT MODEL DELIVERABLE DESCRIPTION",
-                                                 project=project, )
+        deliverable = Deliverable.objects.create(
+            name="TEST PROJECT MODEL DELIVERABLE",
+            description="TEST PROJECT MODEL DELIVERABLE DESCRIPTION",
+            project=project, )
         deliverable.contributor.add(test_user)
         deliverable.save()
         # Generate document
-        document = Document.objects.create(name="TEST PROJECT MODEL DOCUMENT", link="TEST LINK",
-                                           deliverable=deliverable)
+        document = Document.objects.create(
+            name="TEST PROJECT MODEL DOCUMENT",
+            link="TEST LINK",
+            deliverable=deliverable)
         document.save()
 
     def create_project(self,
@@ -1394,21 +1412,24 @@ class ContributorProjectTest(TestCase):
         """ Set up variables before launching tests.
         """
         # Generate user
-        test_user = ProjectPlannerUser.objects.create_user(email="test_man@itest.com",
-                                                           first_name="Claude",
-                                                           name="Francois",
-                                                           team="Designer",
-                                                           password="Chanson",
-                                                           )
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
         test_user.save()
         # Generate project
-        project = Project.objects.create(name="TEST CONTRIBUTORPROJECT MODEL PROJECT")
+        project = Project.objects.create(
+            name="TEST CONTRIBUTORPROJECT MODEL PROJECT")
         project.contributor.add(test_user)
         project.save()
         # Generate deliverable
-        deliverable = Deliverable.objects.create(name="TEST CONTRIBUTORPROJECT MODEL DELIVERABLE",
-                                                 description="TEST CONTRIBUTORPROJECT MODEL DELIVERABLE DESCRIPTION",
-                                                 project=project, )
+        deliverable = Deliverable.objects.create(
+            name="TEST CONTRIBUTORPROJECT MODEL DELIVERABLE",
+            description="TEST CONTRIBUTORPROJECT MODEL DELIVERABLE DESCRIPTION",
+            project=project, )
         deliverable.contributor.add(test_user)
         deliverable.save()
         # Generate document
@@ -1422,7 +1443,8 @@ class ContributorProjectTest(TestCase):
                                    permission='CONTRIB'):
         # Gather information in database
         user = ProjectPlannerUser.objects.get(name="Francois")
-        project = Project.objects.get(name="TEST CONTRIBUTORPROJECT MODEL PROJECT")
+        project = Project.objects.get(
+            name="TEST CONTRIBUTORPROJECT MODEL PROJECT")
 
         # Create a deliverable
         project_test = ContributorProject.objects.create(addingDate=adding_date,

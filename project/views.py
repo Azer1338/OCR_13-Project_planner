@@ -8,11 +8,15 @@ from django.utils import timezone
 from accounts.function_for_accounts import send_notifications_to_contributor
 from accounts.models import ProjectPlannerUser
 from document.models import Document
-from project.forms import CreateProjectForm, ModifyProjectForm, AddMemberToProjectForm, AddDeliverableToProjectForm, \
-    AddContributorToDeliverableForm, UpdateContributorComment, ModifyDeliverableContentForm
-from project.function_for_project import define_project_advancement, contributor_is_not_already_in_the_list, \
+from project.forms import CreateProjectForm, ModifyProjectForm,\
+    AddMemberToProjectForm, AddDeliverableToProjectForm, \
+    AddContributorToDeliverableForm, UpdateContributorComment,\
+    ModifyDeliverableContentForm
+from project.function_for_project import define_project_advancement,\
+    contributor_is_not_already_in_the_list, \
     define_deliverable_progression
-from project.models import Project, Deliverable, ContributorProject, ContributorDeliverable
+from project.models import Project, Deliverable, ContributorProject,\
+    ContributorDeliverable
 from main.settings import env
 
 
@@ -211,8 +215,9 @@ def team_members_listing_view(request, project_id):
         # Check that user designed is not already a contributor
         member_designed = ProjectPlannerUser.objects.\
             get(id=form.data['projectPlannerUser'])
-        already_in_the_list_check = contributor_is_not_already_in_the_list(member_designed,
-                                                                           contributor_list)
+        already_in_the_list_check = contributor_is_not_already_in_the_list(
+            member_designed,
+            contributor_list)
 
         if form.is_valid() and not already_in_the_list_check:
             # Add user in the project
@@ -300,8 +305,9 @@ def deliverable_listing_view(request, project_id):
                                             dueDate=form.data['dueDate'],
                                             project=project)
             deliverable_added.save()
-            contributor_deliverable = ContributorDeliverable(projectPlannerUser=member_designed,
-                                                             deliverable=deliverable_added, )
+            contributor_deliverable = ContributorDeliverable(
+                projectPlannerUser=member_designed,
+                deliverable=deliverable_added)
             contributor_deliverable.save()
 
             # Reset field
@@ -521,8 +527,10 @@ def add_contributor_to_deliverable_view(request, deliverable_id):
         # Check if user designed is not already a contributor
         member_designed = ProjectPlannerUser.objects. \
             get(id=add_contributor_form.data['projectPlannerUser'])
-        already_in_the_list_check = contributor_is_not_already_in_the_list(member_designed,
-                                                                           contributor_list)
+        already_in_the_list_check = contributor_is_not_already_in_the_list(
+            member_designed,
+            contributor_list
+        )
 
         if add_contributor_form.is_valid() and not already_in_the_list_check:
             # Alert message

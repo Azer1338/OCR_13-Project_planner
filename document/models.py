@@ -8,7 +8,8 @@ class Document(models.Model):
     loadingDate = models.DateField(default=timezone.now)
     link = CloudinaryField('link')
     # One Deliverable to many Document relationship
-    deliverable = models.ForeignKey('project.Deliverable', on_delete=models.CASCADE)
+    deliverable = models.ForeignKey('project.Deliverable',
+                                    on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

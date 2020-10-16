@@ -307,7 +307,8 @@ class FunctionForDeliverableTest(unittest.TestCase):
         test_deliverable.contributor.add(test_user2)
         test_deliverable.save()
         # Test user 2 is ok with deliverable
-        contributor = ContributorDeliverable.objects.get(projectPlannerUser=test_user1)
+        contributor = ContributorDeliverable.objects.\
+            get(projectPlannerUser=test_user1)
         contributor.feedback = "AGREED"
         contributor.save()
 

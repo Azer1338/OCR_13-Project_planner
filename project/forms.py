@@ -1,6 +1,7 @@
 from django import forms
 
-from project.models import Project, ContributorProject, Deliverable, ContributorDeliverable
+from project.models import Project, ContributorProject,\
+    Deliverable, ContributorDeliverable
 
 
 class CreateProjectForm(forms.ModelForm):
@@ -40,6 +41,7 @@ class ModifyProjectForm(forms.ModelForm):
             'description',
             'dueDate'
         ]
+
 
 class AddContributorToDeliverableForm(forms.ModelForm):
     class Meta:
