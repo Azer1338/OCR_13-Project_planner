@@ -34,17 +34,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', env.str("SECRET_KEY"))
 # SECURITY WARNING: don't run with debug turned on in production!
 ENV = env.str("ENV")
 
-if os.environ.get('ENV') == 'PRODUCTION':
-    DEBUG = False
-else:
-    DEBUG = True
+# Debug
+DEBUG = False
 
 # Allow the access to
-if os.environ.get('ENV') == 'PRODUCTION':
-    ALLOWED_HOSTS = ['***********']
-else:
-    ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['178.128.250.0']
 
 # Application definition
 AUTH_USER_MODEL = 'accounts.ProjectPlannerUser'
