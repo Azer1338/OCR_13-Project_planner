@@ -441,11 +441,11 @@ def display_deliverable_view(request, deliverable_id):
     if deliverable.status != "APPROVED":
         # Flex template - with form
         return render(request,
-                      'deliverable/displayDeliverable.html', context)
+                      'project/displayDeliverable.html', context)
     else:
         # Frozen template - without form
         return render(request,
-                      'deliverable/displayDeliverableWithoutForms.html',
+                      'project/displayDeliverableWithoutForms.html',
                       context)
 
 
@@ -489,7 +489,7 @@ def modify_deliverable_view(request, deliverable_id):
         'deliverable': deliverable
     }
 
-    return render(request, 'deliverable/modifyDeliverable.html', context)
+    return render(request, 'project/modifyDeliverable.html', context)
 
 
 def add_contributor_to_deliverable_view(request, deliverable_id):

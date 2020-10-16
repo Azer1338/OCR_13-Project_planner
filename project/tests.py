@@ -763,7 +763,7 @@ class DisplayDeliverableViewTestCase(TestCase):
         self.assertEqual(str(response.context['contributors'][0]),
                          'test_man@itest.com')
         self.assertTemplateUsed(response,
-                                '/displayDeliverableWithoutForms.html')
+                                'project/displayDeliverableWithoutForms.html')
 
     def test_display_a_deliverable_page_call_by_a_not_contributor(self):
         """Check the display deliverable page call by a not contributor.
