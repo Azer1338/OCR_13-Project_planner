@@ -39,7 +39,7 @@ ENV = env.str("ENV")
 DEBUG = False
 
 # Allow the access to
-ALLOWED_HOSTS = ['178.128.250.0']
+ALLOWED_HOSTS = ['128.199.34.69']
 
 # Application definition
 AUTH_USER_MODEL = 'accounts.ProjectPlannerUser'
