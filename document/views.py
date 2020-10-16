@@ -51,5 +51,5 @@ def add_document_to_deliverable_view(request, deliverable_id):
             # Message
             messages.warning(request, 'Some fields are not correct!')
 
-    return render(request, 'deliverable/addDocumentToDeliverable.html',
+    return render(request, 'document/addDocumentToDeliverable.html',
                   context)

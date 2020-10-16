@@ -53,7 +53,7 @@ class AddDocumentToDeliverableViewTestCase(TestCase):
         # Generate a dynamic url
         deliverable = Deliverable.objects.\
             get(name="TEST ADD DOCUMENT DELIVERABLE")
-        url = '/deliverable/addDocumentToDeliverable/' + \
+        url = '/document/addDocumentToDeliverable/' + \
               str(deliverable.id) + '/'
         response = c.get(url)
 
@@ -63,7 +63,7 @@ class AddDocumentToDeliverableViewTestCase(TestCase):
         self.assertEqual(str(response.context['deliverable'].name),
                          'TEST ADD DOCUMENT DELIVERABLE')
         self.assertTemplateUsed(response,
-                                'deliverable/addDocumentToDeliverable.html')
+                                'document/addDocumentToDeliverable.html')
 
     def test_adding_a_document_to_deliverable_page_on_post_method(self):
         """Check a modification on model request by user.
@@ -74,19 +74,17 @@ class AddDocumentToDeliverableViewTestCase(TestCase):
         # Generate a dynamic url
         deliverable = Deliverable.objects. \
             get(name="TEST ADD DOCUMENT DELIVERABLE")
-        url = '/deliverable/addDocumentToDeliverable/' + \
+        url = '/document/addDocumentToDeliverable/' + \
               str(deliverable.id) + '/'
         response = c.post(url,
                           data={'deliverable': deliverable.id,
                                 'name': 'Test',
-                                'kindOf': 'EXCEL',
                                 'link': 'https//test.py'},
                           )
         # Generate a dynamic url
-        url2 = '/deliverable/displayDeliverable/' + str(deliverable.id) + '/'
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
         # Check the return message
         self.assertRedirects(response, url2, status_code=302)
-
 
 
 # Deliverable model
