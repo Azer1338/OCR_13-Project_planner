@@ -11,7 +11,6 @@ from project.function_for_project import define_deliverable_progression
 from project.models import Project, Deliverable, ContributorDeliverable
 
 
-
 # add_document_to_deliverable_view Page
 class AddDocumentToDeliverableViewTestCase(TestCase):
 

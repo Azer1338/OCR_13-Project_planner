@@ -1,5 +1,4 @@
-import unittest
-from unittest import TestCase
+from django.test import TestCase, Client
 
 
 # my_account_view page
@@ -282,7 +281,7 @@ class MyUserAdminCreationFormTest(FormTest):
 
 
 # Function for accounts
-class FunctionForAccounts(unittest.TestCase):
+class FunctionForAccounts(TestCase):
 
     def test_send_notifications_to_contributor_project(self):
         # Creation of an user
