@@ -4,7 +4,7 @@ from django.test import TestCase, Client
 from accounts.models import ProjectPlannerUser
 from document.models import Document
 from project.function_for_project import contributor_is_not_already_in_the_list, define_project_advancement
-from project.models import Project, Deliverable, ContributorProject
+from project.models import Project, Deliverable, ContributorProject, ContributorDeliverable
 
 
 #  index_view Page#
@@ -353,7 +353,7 @@ class TeamMembersListingViewTestCase(TestCase):
         response = c.get(url)
         # Check the return message
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'project/projectTeamMembersListing.html')
+        self.assertTemplateUsed(response, 'project/teamMembersListing.html')
 
     def test_team_listing_page_on_post_method_new_contributor(self):
         """Check the adding of a new contributor on the project.
@@ -512,7 +512,7 @@ class DeliverablesListingViewTestCase(TestCase):
         response = c.get(url)
         # Check the return message
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'project/projectDeliverablesListing.html')
+        self.assertTemplateUsed(response, 'project/deliverablesListing.html')
 
     def test_deliverable_listing_page_on_post_method(self):
         """Check the team listing  page call on post method.
@@ -652,6 +652,545 @@ class CheckAndReleaseProjectViewTestCase(TestCase):
         # Check the return message
         self.assertRedirects(response, url2, status_code=302)
         self.assertEqual(project.status, "FINISHED")
+
+
+# display_deliverable_view Page
+class DisplayDeliverableViewTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Generate user
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user.save()
+        # Generate another user
+        test_user2 = ProjectPlannerUser.objects. \
+            create_user(email="test_another_man@itest.com",
+                        first_name="Coralie",
+                        name="Bernard",
+                        team="Accountant",
+                        password="PouetPouet",
+                        )
+        test_user2.save()
+        # Generate project
+        project = Project.objects. \
+            create(name="TEST DISPLAY PROJECT")
+        project.contributor.add(test_user)
+        project.save()
+        # Generate deliverable
+        deliverable = Deliverable.objects. \
+            create(name="TEST DISPLAY DELIVERABLE",
+                   description="TEST DELIVERABLE DESCRIPTION",
+                   project=project,
+                   )
+        deliverable.contributor.add(test_user)
+        deliverable.save()
+        deliverable2 = Deliverable.objects. \
+            create(name="TEST DISPLAY DELIVERABLE2",
+                   description="TEST DELIVERABLE DESCRIPTION",
+                   project=project,
+                   )
+        deliverable2.contributor.add(test_user)
+        deliverable2.save()
+        # Generate document - MOCK IT
+        # image_linked_to_document = CloudinaryField('image',
+        #                                            width_field="image_width",
+        #                                            height_field="image_height",
+        #                                            unique_filename='true',
+        #                                            use_filename='true',
+        #                                            phash='true',
+        #                                            link='https/image.org/')
+        # document = Document.objects.
+        # create(name="TEST DISPLAY DOCUMENT", link=image_linked_to_document,
+        # deliverable=deliverable)
+        # document.save()
+
+    def test_display_deliverable_page(self):
+        """
+        Check the right display of an existing deliverable.
+        :return:
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Generate a dynamic url
+        deliverable = Deliverable.objects.get(name="TEST DISPLAY DELIVERABLE")
+        url = '/displayDeliverable/' + str(deliverable.id) + '/'
+        response = c.get(url)
+        # Check the return message
+        self.assertEqual(response.status_code, 200)
+        # Check context content
+        self.assertEqual(str(response.context['deliverable'].name),
+                         'TEST DISPLAY DELIVERABLE')
+        # self.assertEqual(str(response.context['documents'][0]),
+        # 'TEST DISPLAY DOCUMENT')
+        self.assertEqual(str(response.context['contributors'][0]),
+                         'test_man@itest.com')
+        self.assertTemplateUsed(response,
+                                'project/displayDeliverable.html')
+
+    def test_display_a_frozen_deliverable_page(self):
+        """
+        Check the right display of an frozen deliverable.
+        :return:
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com",
+                password="Chanson")
+        # Generate a dynamic url
+        deliverable2 = Deliverable.objects. \
+            get(name="TEST DISPLAY DELIVERABLE2")
+        deliverable2.status = "APPROVED"
+        deliverable2.save()
+        url = '/displayDeliverable/' + \
+              str(deliverable2.id) + '/'
+        response = c.get(url)
+
+        # Check the return message
+        self.assertEqual(response.status_code, 200)
+        # Check context content
+        self.assertEqual(str(response.context['deliverable'].name),
+                         'TEST DISPLAY DELIVERABLE2')
+        # self.assertEqual(str(response.context['documents'][0]),
+        # 'TEST DISPLAY DOCUMENT')
+        self.assertEqual(str(response.context['contributors'][0]),
+                         'test_man@itest.com')
+        self.assertTemplateUsed(response,
+                                '/displayDeliverableWithoutForms.html')
+
+    def test_display_a_deliverable_page_call_by_a_not_contributor(self):
+        """Check the display deliverable page call by a not contributor.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_another_man@itest.com",
+                password="PouetPouet")
+        # Generate an url call
+        deliverable_created = Deliverable.objects. \
+            get(name="TEST DISPLAY DELIVERABLE2")
+        url = '/displayDeliverable/' + \
+              str(deliverable_created.id) + '/'
+        response = c.get(url,
+                         data={'deliverable_id': deliverable_created.id
+                               }
+                         )
+        # Check the return message
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['current_user'], 'John DOE')
+
+
+# modify_deliverable_view Page
+class ModifyDeliverableViewTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Generate user
+        test_user1 = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user1.save()
+        # Generate project
+        project1 = Project.objects.create(name="TEST MODIFY PROJECT")
+        project1.contributor.add(test_user1)
+        project1.save()
+        # Generate deliverable
+        deliverable1 = Deliverable.objects. \
+            create(name="TEST MODIFY DELIVERABLE",
+                   description="TEST DELIVERABLE DESCRIPTION",
+                   project=project1, )
+        deliverable1.contributor.add(test_user1)
+        deliverable1.save()
+        # Generate document
+        # document1 = Document.objects.
+        # create(name="TEST MODIFY DOCUMENT",
+        # link="TEST LINK", deliverable=deliverable1)
+        # document1.save()
+
+    def test_modify_deliverable_page(self):
+        """Check a modification on model request by user.
+        """
+        # Generate a fake user
+        c = Client()
+        # Generate a dynamic url
+        deliverable = Deliverable.objects. \
+            get(name="TEST MODIFY DELIVERABLE")
+        url = '/modifyDeliverable/' + \
+              str(deliverable.id) + '/'
+        response = c.get(url)
+        # Check the return message
+        self.assertEqual(response.status_code, 200)
+
+    def test_modify_a_deliverable_page_call_on_get_method(self):
+        """Check the modification of a deliverable on get method.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Gather information
+        deliverable = Deliverable.objects.get(name="TEST MODIFY DELIVERABLE")
+
+        # Generate an dynamic url
+        url = '/modifyDeliverable/' + str(deliverable.id) + '/'
+        response = c.get(url)
+
+        # Check the return message
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'project/modifyDeliverable.html')
+
+    def test_modify_a_deliverable_page_call_on_post_method(self):
+        """Check the modification of a deliverable on post method.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Gather information
+        deliverable = Deliverable.objects.get(name="TEST MODIFY DELIVERABLE")
+        # Generate an dynamic url
+        url = '/modifyDeliverable/' + str(deliverable.id) + '/'
+        response = c.post(url,
+                          data={'description': 'Description modified',
+                                'dueDate': '2000-11-10'
+                                }
+                          )
+        # Load again
+        deliverable = Deliverable.objects.get(name="TEST MODIFY DELIVERABLE")
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
+        self.assertEqual(deliverable.description, 'Description modified')
+        self.assertEqual(deliverable.dueDate, datetime.date(2000, 11, 10))
+
+
+# add_contributor_to_deliverable_view Page
+class AddContributorToDeliverableViewTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Generate user
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user.save()
+        test_user2 = ProjectPlannerUser.objects. \
+            create_user(email="test_man2@itest.com",
+                        first_name="Michel",
+                        name="Berger",
+                        team="Marketing",
+                        password="Poussette",
+                        )
+        test_user2.save()
+        # Generate project
+        project = Project.objects. \
+            create(name="TEST ADD CONTRIBUTOR PROJECT")
+        project.contributor.add(test_user)
+        project.save()
+        # Generate deliverable
+        deliverable = Deliverable.objects. \
+            create(name="TEST ADD CONTRIBUTOR DELIVERABLE",
+                   description="TEST ADD CONTRIBUTOR DELIVERABLE DESCRIPTION",
+                   project=project, )
+        deliverable.contributor.add(test_user)
+        deliverable.save()
+        # Generate document
+        # document = Document.objects.
+        # create(name="TEST ADD CONTRIBUTOR DOCUMENT",
+        # link="TEST LINK", deliverable=deliverable)
+        # document.save()
+
+    def test_adding_a_contributor_to_deliverable_page_on_get_method(self):
+        """Check a modification on model request by user.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Generate a dynamic url
+        deliverable = Deliverable.objects.\
+            get(name="TEST ADD CONTRIBUTOR DELIVERABLE")
+        url = '/addContributorToDeliverable/' + \
+              str(deliverable.id) + '/'
+        response = c.get(url)
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
+
+    def test_adding_a_contributor_to_deliverable_page_on_post_method(self):
+        """Check a modification on model request by user.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Generate a dynamic url
+        deliverable = Deliverable.objects. \
+            get(name="TEST ADD CONTRIBUTOR DELIVERABLE")
+        user = ProjectPlannerUser.objects.get(name="Berger")
+        url = '/addContributorToDeliverable/' + \
+              str(deliverable.id) + '/'
+        response = c.post(url,
+                          data={'projectPlannerUser': user.id,
+                                'function': 'COLLABORATOR'
+                                }
+                          )
+        contributor_list = ContributorDeliverable.objects. \
+            filter(deliverable=deliverable)
+        # Generate a dynamic url
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
+        self.assertEqual(len(contributor_list), 2)
+        self.assertEqual(str(contributor_list[0]), str(user))
+
+
+# remove_contributor_from_deliverable_view Page
+class RemoveContributorFromDeliverableVTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Generate users
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user.save()
+        test_user2 = ProjectPlannerUser.objects. \
+            create_user(email="test_man2@itest.com",
+                        first_name="Michel",
+                        name="Berger",
+                        team="Marketing",
+                        password="Poussette",
+                        )
+        test_user2.save()
+        # Generate project
+        project = Project.objects.create(name="TEST TEAM LISTING PROJECT")
+        project.contributor.add(test_user)
+        project.contributor.add(test_user2)
+        project.save()
+        # Generate deliverable
+        deliverable = Deliverable.objects. \
+            create(name="TEST TEAM LISTING DELIVERABLE",
+                   description="TEST TEAM LISTING DELIVERABLE DESCRIPTION",
+                   project=project, )
+        deliverable.contributor.add(test_user)
+        deliverable.contributor.add(test_user2)
+        deliverable.save()
+        # Generate document
+        # document = Document.objects.
+        # create(name="TEST TEAM LISTING DOCUMENT",
+        # link="TEST LINK", deliverable=deliverable)
+        # document.save()
+
+    def test_remove_contributor_deliverable(self):
+        """Check the removing team member call.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Gather info
+        deliverable = Deliverable.objects. \
+            get(name="TEST TEAM LISTING DELIVERABLE")
+        contributor_initial_list_length = len(ContributorDeliverable.
+                                              objects.filter(deliverable=deliverable))
+        user2 = ProjectPlannerUser.objects.get(name='Berger')
+        contributor_to_remove = ContributorDeliverable.objects \
+            .get(projectPlannerUser=user2)
+
+        # Generate an url call
+        url = '/removeContributorFromDeliverable/' + \
+              str(contributor_to_remove.id) + '/'
+        response = c.get(url)
+        # Reload
+        deliverable = Deliverable.objects. \
+            get(name="TEST TEAM LISTING DELIVERABLE")
+        contributor_final_list_length = len(ContributorDeliverable.objects.
+                                            filter(deliverable=deliverable))
+
+        # Check the return message
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+        self.assertRedirects(response, url2, status_code=302)
+        self.assertNotEqual(contributor_initial_list_length,
+                            contributor_final_list_length)
+
+
+# update_contribution_feedback_to_deliverable_view Page
+class UpdateContributionFeedbackToDeliverableViewTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Generate user
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user.save()
+        # Generate project
+        project = Project.objects.create(name="TEST ADD DOCUMENT PROJECT")
+        project.contributor.add(test_user)
+        project.save()
+        # Generate deliverable
+        deliverable = Deliverable.objects. \
+            create(name="TEST ADD DOCUMENT DELIVERABLE",
+                   description="TEST ADD DOCUMENT DELIVERABLE DESCRIPTION",
+                   project=project, )
+        deliverable.contributor.add(test_user)
+        deliverable.save()
+        # Generate document
+        # document = Document.objects.
+        # create(name="TEST ADD DOCUMENT DOCUMENT", link="TEST LINK",
+        # deliverable=deliverable)
+        # document.save()
+
+    def test_update_contribution_feedback_to_deliverable_on_get_method(self):
+        """Check a modification on comment/feedback request by
+         user on get method.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Gather information
+        deliverable = Deliverable.objects. \
+            get(name="TEST ADD DOCUMENT DELIVERABLE")
+        user = ProjectPlannerUser.objects.get(name='Francois')
+        contributor = ContributorDeliverable.objects. \
+            get(projectPlannerUser=user, deliverable=deliverable)
+
+        # Get to the url
+        url = '/updateContributionToDeliverable/' + \
+              str(contributor.id) + '/'
+        response = c.get(url)
+
+        # Generate a dynamic url
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
+
+    def test_update_contribution_feedback_to_deliverable_on_post_method(self):
+        """Check a modification on comment/feedback request by user
+        on post method.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Gather information
+        deliverable = Deliverable.objects. \
+            get(name="TEST ADD DOCUMENT DELIVERABLE")
+        user = ProjectPlannerUser.objects.get(name='Francois')
+        contributor = ContributorDeliverable.objects. \
+            get(projectPlannerUser=user, deliverable=deliverable)
+
+        # Generate a dynamic url
+        url = '/updateContributionToDeliverable/' + \
+              str(contributor.id) + '/'
+        response = c.post(url,
+                          data={'feedback': 'AGREED',
+                                'comment': 'This is a updated comment'
+                                },
+                          )
+        # Load again
+        contributor = ContributorDeliverable.objects. \
+            get(projectPlannerUser=user, deliverable=deliverable)
+
+        # Generate a dynamic url
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
+        self.assertEqual(contributor.comment, 'This is a updated comment')
+
+
+# check_and_release_deliverable_view Page
+class CheckAndReleaseDeliverableViewTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Generate users
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user.save()
+        test_user2 = ProjectPlannerUser.objects. \
+            create_user(email="test_man2@itest.com",
+                        first_name="Michel",
+                        name="Berger",
+                        team="Marketing",
+                        password="Poussette",
+                        )
+        test_user2.save()
+        # Generate project
+        project = Project.objects.create(name="TEST CHECK N RELEASE PROJECT")
+        project.contributor.add(test_user)
+        project.save()
+        # Generate deliverable
+        deliverable = Deliverable.objects. \
+            create(name="TEST CHECK N RELEASE DELIVERABLE",
+                   description="TEST DELIVERABLE LISTING DELIVERABLE DESCRIPTION",
+                   project=project, )
+        deliverable.contributor.add(test_user)
+        deliverable.save()
+        # Generate document
+        document = Document.objects. \
+            create(name="TEST DELIVERABLE LISTING DOCUMENT", link="TEST LINK",
+                   deliverable=deliverable)
+        document.save()
+
+    def test_check_and_release_project_view_page(self):
+        """Check the check and release a project.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Gather information
+        deliverable = Deliverable.objects. \
+            get(name="TEST CHECK N RELEASE DELIVERABLE")
+        user = ProjectPlannerUser.objects.get(name='Francois')
+        # Force contributor to agreed on deliverable
+        contributor = ContributorDeliverable.objects. \
+            get(projectPlannerUser=user, deliverable=deliverable)
+        contributor.feedback = 'AGREED'
+        contributor.save()
+        # Generate an url call
+        url = '/checkAndReleaseDeliverable/' + \
+              str(deliverable.id) + '/'
+        response = c.get(url)
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+
+        # Load again
+        deliverable = Deliverable.objects. \
+            get(name="TEST CHECK N RELEASE DELIVERABLE")
+
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
+        self.assertEqual(deliverable.status, "APPROVED")
 
 
 # contributor_is_not_already_in_the_list Function

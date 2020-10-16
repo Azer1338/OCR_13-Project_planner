@@ -590,7 +590,7 @@ def update_contribution_feedback_to_deliverable_view(request, contributor_id):
             contributor.comment = request.POST.get("comment")
 
         contributor.save()
-        # Alert messagedjan
+        # Alert message
         messages.success(request,
                          "Feedback updated for : " + str(contributor.feedback))
     else:
