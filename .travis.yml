@@ -12,6 +12,7 @@ before_script:
 
 env: DJANGO_SETTINGS_MODULE="main.settings.travis"
 
+
 services:
   - postgresql
 
