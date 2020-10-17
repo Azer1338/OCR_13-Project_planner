@@ -10,7 +10,7 @@ branches:
 before_script:
   - pip3 install -r requirements.txt
 
-env: DJANGO_SETTINGS_MODULE="main.settings.travis"
+env: DJANGO_SETTINGS_MODULE="main.settings.travis", SECRET_KEY= "jkgnberkjgerzlmighzbigùopi"
 
 
 services:
