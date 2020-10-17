@@ -9,9 +9,14 @@ branches:
 
 before_script:
   - pip3 install -r requirements.txt
+  - export SECRET_KEY="zohguiozrhgu62354ézh232ttr2rjé"
+  - export ENV="PRODUCTION"
+  - exportYOUR_DATABASE_NAME=""
+  - export YOUR_USER_DB=""
+  - export YOUR_PASSWORD_DB=""
 
 env:
-  - DJANGO_SETTINGS_MODULE="main.settings.travis" SECRET_KEY="zohguiozrhgu62354ézh232ttr2rjé" ENV="PRODUCTION" YOUR_DATABASE_NAME="" YOUR_USER_DB="" YOUR_PASSWORD_DB=""
+  - DJANGO_SETTINGS_MODULE="main.settings.travis"
 
 services:
   - postgresql
