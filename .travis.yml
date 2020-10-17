@@ -10,7 +10,8 @@ branches:
 before_script:
   - pip3 install -r requirements.txt
 
-env: DJANGO_SETTINGS_MODULE="main.settings.travis" SECRET_KEY="zohguiozrhgu62354ézh232ttr2rjé" ENV="PRODUCTION"
+env:
+  - DJANGO_SETTINGS_MODULE="main.settings.travis" SECRET_KEY="zohguiozrhgu62354ézh232ttr2rjé" ENV="PRODUCTION" YOUR_DATABASE_NAME="" YOUR_USER_DB="" YOUR_PASSWORD_DB=""
 
 services:
   - postgresql
