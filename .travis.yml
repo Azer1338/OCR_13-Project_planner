@@ -9,7 +9,7 @@ branches:
 
 before_script:
   - pip3 install -r requirements.txt
-  - python3 manage.py collectstatic
+  - ./manage.py collectstatic
 
 env:
   global:
@@ -18,8 +18,14 @@ env:
     - YOUR_DATABASE_NAME=""
     - YOUR_USER_DB=""
     - YOUR_PASSWORD_DB=""
+    - CLOUDINARY_CONFIG_CLOUD_NAME = ""
+    - CLOUDINARY_CONFIG_API_KEY = ""
+    - CLOUDINARY_CONFIG_API_SECRET = ""
+    - MAILGUN_ACCESS_KEY=''
+    - MAILGUN_SERVER_NAME=''
+    - MAILGUN_SENDER_EMAIL_ADDRESS=''
   jobs:
-  - DJANGO_SETTINGS_MODULE="main.settings.travis"
+  - DJANGO_SETTINGS_MODULE="main.settings"
 
 services:
   - postgresql
