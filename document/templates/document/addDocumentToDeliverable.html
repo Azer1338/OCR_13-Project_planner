@@ -28,7 +28,7 @@
         <p class="card-title">{{ deliverable.description}}</p>
       </div>
       <div class="card-body">
-        <form action="/deliverable/addDocumentToDeliverable/{{ deliverable.id }}/"
+        <form action="/document/addDocumentToDeliverable/{{ deliverable.id }}/"
               method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           {{ add_document_form|crispy }}
