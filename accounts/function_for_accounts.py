@@ -22,11 +22,6 @@ def send_notifications_to_contributor(event_from):
                      ', just move to ' + event_from.status + '.'
         contributor_list = ContributorDeliverable.objects.filter(deliverable=event_from.id)
 
-        contributor_email_list = []
-        for contributor in contributor_list:
-            contributor_email_list.append(contributor.projectPlannerUser.email)
-            print(contributor.projectPlannerUser.email)
-
     # In case of Project
     elif str(type(event_from)) == "<class 'project.models.Project'>":
         # Email title
@@ -40,19 +35,23 @@ def send_notifications_to_contributor(event_from):
     # Other event
     else:
         # Email title
-        title_email = 'Event on Project Planner'
+        title_email = 'Undefined events on Project Planner'
         # Email body
         body_email = 'An event is detected'
         # Admin's email
         contributor_list = ['adrien13.f@gmail.com']
 
-    # FOR TEST PURPOSE
-    contributor_list = ['adrien13.f@gmail.com']
+    # Gater contributor list
+    contributor_email_list = []
+    for contributor in contributor_list:
+        contributor_email_list.append(str(contributor.projectPlannerUser.email))
+
+    print(contributor_email_list)
 
     # Sending
     email = EmailMessage(title_email,
                          body_email,
                          'contact@projetplanner.org',
-                         contributor_list,
+                         contributor_email_list,
                          )
     email.send()

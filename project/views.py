@@ -349,11 +349,12 @@ def delete_deliverable_view(request, deliverable_id):
     # Modify content
     deliverable_to_remove.status = "Deleted"
 
+    # Email contributor
+    send_notifications_to_contributor(deliverable_to_remove)
+
     # Remove member from contributor list
     deliverable_to_remove.delete()
 
-    # Email contributor
-    send_notifications_to_contributor(deliverable_to_remove)
     # Message
     messages.success(request, 'Deliverable deleted')
 
