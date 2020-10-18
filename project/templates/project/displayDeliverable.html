@@ -142,7 +142,7 @@
             <!-- Add doc button -->
             <div class="row">
               <div class="col-lg-4 mx-auto">
-                <a class="btn btn-primary btn-xl" href="/deliverable/addDocumentToDeliverable/{{deliverable.id }}/">
+                <a class="btn btn-primary btn-xl" href="/document/addDocumentToDeliverable/{{deliverable.id }}/">
                   Add a Document
                 </a>
               </div>
@@ -176,7 +176,7 @@
                 <!-- Contributor details -->
                 <tbody>
                 {% for contributor in contributors %}
-                <form method="POST" action="/deliverable/updateContributionToDeliverable/{{ contributor.id }}/">
+                <form method="POST" action="/updateContributionToDeliverable/{{ contributor.id }}/">
                   {% csrf_token %}
                   <tr>
                     <!-- Name -->
@@ -208,7 +208,7 @@
                     <!-- Action button -->
                     {% if user_function == "Author" and not contributor.function == "Author" %}
                     <td>
-                      <a class="btn btn-primary" href="/deliverable/removeContributorFromDeliverable/{{ contributor.id }}/">
+                      <a class="btn btn-primary" href="/removeContributorFromDeliverable/{{ contributor.id }}/">
                         Remove
                       </a>
                     </td>
@@ -224,7 +224,7 @@
             {% if user_function == "Author"%}
             <div class="row">
               <div class="col-md-12">
-                <form method="POST" action="/deliverable/addContributorToDeliverable/{{ deliverable.id }}/">
+                <form method="POST" action="/addContributorToDeliverable/{{ deliverable.id }}/">
                   {% csrf_token %}
                   {{ addContributorForm|crispy }}
                   <div class="row d-flex justify-content-around">
@@ -252,12 +252,12 @@
         <div class="card-body">
           <div class="row d-flex justify-content-around">
             <div class="col-md-3">
-              <a class="btn btn-primary" href="/deliverable/checkAndReleaseDeliverable/{{ deliverable.id }}/">
+              <a class="btn btn-primary" href="/checkAndReleaseDeliverable/{{ deliverable.id }}/">
                 Release it!
               </a>
             </div>
             <div class="col-md-3">
-              <a class="btn btn-primary" href="/deliverable/modifyDeliverable/{{ deliverable.id }}/">
+              <a class="btn btn-primary" href="/modifyDeliverable/{{ deliverable.id }}/">
                 Modify it
               </a>
             </div>
