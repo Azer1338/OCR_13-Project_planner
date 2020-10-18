@@ -1,7 +1,7 @@
 # Some functions to support the code
 from django.core.mail import EmailMessage
 
-from project.models import Deliverable, Project, ContributorDeliverable
+from project.models import Deliverable, Project, ContributorDeliverable, ContributorProject
 
 
 def send_notifications_to_contributor(event_from):
@@ -30,7 +30,7 @@ def send_notifications_to_contributor(event_from):
         # Email body
         body_email = 'The project ' + event_from.name + \
                      ', just move to ' + event_from.status + '.'
-        contributor_list = Project.objects.filter(name=event_from)
+        contributor_list = ContributorProject.objects.filter(project=event_from.id)
 
     # Other event
     else:
