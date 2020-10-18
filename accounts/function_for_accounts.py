@@ -11,7 +11,7 @@ def send_notifications_to_contributor(event_from):
     :return:
     """
     # In case of Deliverable
-    if str(type(event_from)) == "<class 'deliverable.models.Deliverable'>":
+    if str(type(event_from)) == "<class 'project.models.Deliverable'>":
         # Email title
         title_email = 'Event on your deliverable! - ' + \
                       event_from.project.name + ' - ' + \
@@ -20,7 +20,7 @@ def send_notifications_to_contributor(event_from):
         body_email = 'The deliverable ' + event_from.name + \
                      ' in the project' + event_from.project.name + \
                      ', just move to ' + event_from.status + '.'
-        contributor_list = ContributorDeliverable.objects.filter(name=event_from)
+        contributor_list = ContributorDeliverable.objects.filter(deliverable=event_from.id)
         print(contributor_list)
 
     # In case of Project
