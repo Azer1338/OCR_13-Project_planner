@@ -337,7 +337,7 @@ def deliverable_listing_view(request, project_id):
 
 def delete_deliverable_view(request, deliverable_id):
     """
-    Remove a team member from a project.
+    Remove a deliverable from a project.
     :param request:
     :param deliverable_id: deliverable id in the table
     :return:

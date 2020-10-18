@@ -18,10 +18,14 @@ def send_notifications_to_contributor(event_from):
                       event_from.name + ' - Project Planner'
         # Email body
         body_email = 'The deliverable ' + event_from.name + \
-                     ' in the project' + event_from.project.name + \
+                     ' in the project ' + event_from.project.name + \
                      ', just move to ' + event_from.status + '.'
         contributor_list = ContributorDeliverable.objects.filter(deliverable=event_from.id)
-        print(contributor_list)
+
+        contributor_email_list = []
+        for contributor in contributor_list:
+            contributor_email_list.append(contributor.projectPlannerUser.email)
+            print(contributor.projectPlannerUser.email)
 
     # In case of Project
     elif str(type(event_from)) == "<class 'project.models.Project'>":
