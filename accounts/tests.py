@@ -246,7 +246,7 @@ class LogoutPageTestCase(TestCase):
         response = self.client.get(reverse('accounts:logOut'))
         messages = list(response.context['messages'])
 
-        self.assertEqual(response.status_code, 200) 
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(str(messages[0]), 'Bye bye!')
 
 

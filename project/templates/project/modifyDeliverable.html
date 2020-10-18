@@ -27,7 +27,7 @@
         <p class="card-title">Modify the content</p>
       </div>
       <div class="card-body">
-        <form action="/deliverable/modifyDeliverable/{{ deliverable.id }}/"
+        <form action="/modifyDeliverable/{{ deliverable.id }}/"
               method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="row">

@@ -165,7 +165,7 @@
                 <!-- Contributor details -->
                 <tbody>
                 {% for contributor in contributors %}
-                <form method="POST" action="/deliverable/updateContributionToDeliverable/{{ contributor.id }}/">
+                <form method="POST" action="/updateContributionToDeliverable/{{ contributor.id }}/">
                   {% csrf_token %}
                   <tr>
                     <!-- Name -->
