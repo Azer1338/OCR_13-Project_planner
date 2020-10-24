@@ -50,7 +50,6 @@ class ContributorProject(models.Model):
                                            on_delete=models.CASCADE)
 
 
-
 class Deliverable(models.Model):
     # Choices
     STATUS = [
