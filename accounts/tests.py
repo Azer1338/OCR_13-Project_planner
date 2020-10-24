@@ -236,6 +236,19 @@ class LogoutPageTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    # test django flash message
+    def test_django_flash_messages(self):
+        """
+        Check the log out message.
+        :return:
+        """
+
+        response = self.client.get(reverse('accounts:logOut'))
+        messages = list(response.context['messages'])
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(str(messages[0]), 'Bye bye!')
+
 
 # MyUser models
 class MyUserTest(TestCase):

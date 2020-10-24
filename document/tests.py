@@ -64,26 +64,26 @@ class AddDocumentToDeliverableViewTestCase(TestCase):
         self.assertTemplateUsed(response,
                                 'document/addDocumentToDeliverable.html')
 
-    def test_adding_a_document_to_deliverable_page_on_post_method(self):
-        """Check a modification on model request by user.
-        """
-        # Generate a fake user
-        c = Client()
-        c.login(email="test_man@itest.com", password="Chanson")
-        # Generate a dynamic url
-        deliverable = Deliverable.objects. \
-            get(name="TEST ADD DOCUMENT DELIVERABLE")
-        url = '/document/addDocumentToDeliverable/' + \
-              str(deliverable.id) + '/'
-        response = c.post(url,
-                          data={'deliverable': deliverable.id,
-                                'name': 'Test',
-                                'link': 'https//test.py'},
-                          )
-        # Generate a dynamic url
-        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
-        # Check the return message
-        self.assertRedirects(response, url2, status_code=302)
+    # def test_adding_a_document_to_deliverable_page_on_post_method(self):
+    #     """Check a modification on model request by user.
+    #     """
+    #     # Generate a fake user
+    #     c = Client()
+    #     c.login(email="test_man@itest.com", password="Chanson")
+    #     # Generate a dynamic url
+    #     deliverable = Deliverable.objects. \
+    #         get(name="TEST ADD DOCUMENT DELIVERABLE")
+    #     url = '/document/addDocumentToDeliverable/' + \
+    #           str(deliverable.id) + '/'
+    #     response = c.post(url,
+    #                       data={'deliverable': deliverable.id,
+    #                             'name': 'Test',
+    #                             'link': 'https//test.py'},
+    #                       )
+    #     # Generate a dynamic url
+    #     url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+    #     # Check the return message
+    #     self.assertRedirects(response, url2, status_code=302)
 
 
 # Deliverable model

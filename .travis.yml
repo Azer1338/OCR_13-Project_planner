@@ -1,0 +1,36 @@
+language: python
+python:
+  - '3.5'
+
+# safelist
+branches:
+  only:
+    - release
+
+before_script:
+  - pip3 install -r requirements.txt
+  - ./manage.py collectstatic
+
+env:
+  global:
+    - SECRET_KEY="zohguiozrhgu62354ézh232ttr2rjé"
+    - ENV="PRODUCTION"
+    - YOUR_DATABASE_NAME=""
+    - YOUR_USER_DB=""
+    - YOUR_PASSWORD_DB=""
+    - CLOUDINARY_CONFIG_CLOUD_NAME="projectPlannerCloud"
+    - CLOUDINARY_CONFIG_API_KEY=""
+    - CLOUDINARY_CONFIG_API_SECRET=""
+    - MAILGUN_ACCESS_KEY=''
+    - MAILGUN_SERVER_NAME=''
+    - MAILGUN_SENDER_EMAIL_ADDRESS=''
+  jobs:
+  - DJANGO_SETTINGS_MODULE="main.settings"
+
+services:
+  - postgresql
+
+script:
+  - ./manage.py test
+
+
