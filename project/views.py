@@ -4,6 +4,7 @@ import cloudinary.api
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.utils import timezone
+import logging
 
 from accounts.function_for_accounts import send_notifications_to_contributor
 from accounts.models import ProjectPlannerUser
@@ -19,6 +20,8 @@ from project.models import Project, Deliverable, ContributorProject,\
     ContributorDeliverable
 from main.settings import env
 
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 def index_view(request):
     """
@@ -26,6 +29,11 @@ def index_view(request):
     :param request:
     :return:
     """
+    
+    logger.info('New search', exc_info=True, extra={
+        # Optionally pass a request and we'll grab any information we can
+        'request': request,
+        })
 
     # return the index page
     return render(request, 'project/index.html')
