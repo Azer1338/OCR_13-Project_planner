@@ -658,5 +658,8 @@ def check_and_release_deliverable_view(request, deliverable_id):
         deliverable.status = 'APPROVAL ON GOING'
         deliverable.save()
 
+        # Message
+        messages.success(request, 'Not all contributors agreed!')
+
     return redirect("project:displayDeliverable",
                     deliverable_id=deliverable_id)
