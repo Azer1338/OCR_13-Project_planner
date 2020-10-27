@@ -659,7 +659,7 @@ def check_and_release_deliverable_view(request, deliverable_id):
         deliverable.save()
 
         # Message
-        messages.success(request, 'Not all contributors agreed!')
+        messages.success(request, 'Not all contributors agreed on it!')
 
     return redirect("project:displayDeliverable",
                     deliverable_id=deliverable_id)
