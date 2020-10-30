@@ -46,7 +46,7 @@ def send_notifications_to_contributor(event_from):
     for contributor in contributor_list:
         contributor_email_list.append(str(contributor.projectPlannerUser.email))
 
-    print(contributor_email_list)
+    # print(contributor_email_list)
 
     # Sending
     email = EmailMessage(title_email,
