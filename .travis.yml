@@ -14,15 +14,15 @@ env:
   global:
     - SECRET_KEY="zohguiozrhgu62354ézh232ttr2rjé"
     - ENV="PRODUCTION"
-    - YOUR_DATABASE_NAME="patate"
-    - YOUR_USER_DB="patate"
-    - YOUR_PASSWORD_DB="patate"
-    - CLOUDINARY_CONFIG_CLOUD_NAME="projectPlannerCloud"
-    - CLOUDINARY_CONFIG_API_KEY="patate"
-    - CLOUDINARY_CONFIG_API_SECRET="patate"
-    - MAILGUN_ACCESS_KEY='patate'
-    - MAILGUN_SERVER_NAME='patate'
-    - MAILGUN_SENDER_EMAIL_ADDRESS='patate'
+    - YOUR_DATABASE_NAME=""
+    - YOUR_USER_DB=""
+    - YOUR_PASSWORD_DB=""
+    - CLOUDINARY_CONFIG_CLOUD_NAME=""
+    - CLOUDINARY_CONFIG_API_KEY=""
+    - CLOUDINARY_CONFIG_API_SECRET=""
+    - MAILGUN_ACCESS_KEY=''
+    - MAILGUN_SERVER_NAME=''
+    - MAILGUN_SENDER_EMAIL_ADDRESS=''
   jobs:
   - DJANGO_SETTINGS_MODULE="main.settings"
 
