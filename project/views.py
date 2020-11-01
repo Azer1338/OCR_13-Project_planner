@@ -74,9 +74,12 @@ def create_project_view(request):
             first_deliverable.contributor.add(request.user)
 
             # Email contributor
-            send_notifications_to_contributor(project)
+            error_message = send_notifications_to_contributor(project)
             # Message
-            messages.success(request, 'Project created!')
+            if error_message:
+                messages.success(request, error_message)
+            else:
+                messages.success(request, 'Project created!')
 
             # Redirect to the project main page
             return redirect('project:displayProject',
@@ -192,9 +195,12 @@ def delete_project_view(request, project_id):
     project.delete()
 
     # Email contributor
-    send_notifications_to_contributor(project)
+    error_message = send_notifications_to_contributor(project)
     # Message
-    messages.success(request, 'Project deleted')
+    if error_message:
+        messages.success(request, error_message)
+    else:
+        messages.success(request, 'Project created!')
 
     return redirect('project:index')
 
@@ -358,7 +364,12 @@ def delete_deliverable_view(request, deliverable_id):
     deliverable_to_remove.status = "Deleted"
 
     # Email contributor
-    send_notifications_to_contributor(deliverable_to_remove)
+    error_message = send_notifications_to_contributor(project)
+    # Message
+    if error_message:
+        messages.success(request, error_message)
+    else:
+        messages.success(request, 'Project created!')
 
     # Remove member from contributor list
     deliverable_to_remove.delete()
@@ -391,9 +402,12 @@ def check_and_release_project_view(request, project_id):
         project.save()
 
         # Email contributor
-        send_notifications_to_contributor(project)
+        error_message = send_notifications_to_contributor(project)
         # Message
-        messages.success(request, 'Project finalized!')
+        if error_message:
+            messages.success(request, error_message)
+        else:
+            messages.success(request, 'Project created!')
     else:
         project.status = 'ON GOING'
         project.save()
@@ -650,7 +664,12 @@ def check_and_release_deliverable_view(request, deliverable_id):
         deliverable.save()
 
         # Email contributor
-        send_notifications_to_contributor(deliverable)
+        error_message = send_notifications_to_contributor(project)
+        # Message
+        if error_message:
+            messages.success(request, error_message)
+        else:
+            messages.success(request, 'Project created!')
 
         # Message
         messages.success(request, 'Deliverable finalized!')

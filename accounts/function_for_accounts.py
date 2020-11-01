@@ -1,5 +1,7 @@
 # Some functions to support the code
+from django.contrib import messages
 from django.core.mail import EmailMessage
+from django_mailgun import MailgunAPIError
 
 from project.models import Deliverable, Project, ContributorDeliverable, ContributorProject
 
@@ -41,7 +43,7 @@ def send_notifications_to_contributor(event_from):
         # Admin's email
         contributor_list = ['adrien13.f@gmail.com']
 
-    # Gater contributor list
+    # Gather contributor list
     contributor_email_list = []
     for contributor in contributor_list:
         contributor_email_list.append(str(contributor.projectPlannerUser.email))
@@ -54,4 +56,11 @@ def send_notifications_to_contributor(event_from):
                          'contact@projetplanner.org',
                          contributor_email_list,
                          )
-    email.send()
+    # Raise an Error if someone is not add into Mailgun interface.
+    try:
+        email.send()
+    except MailgunAPIError as error:
+        # Message
+        message = "Contributors is not log on Mailgun"
+        print("Contributors is not log on Mailgun. " + str(error))
+        return message
