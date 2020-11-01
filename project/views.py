@@ -364,7 +364,7 @@ def delete_deliverable_view(request, deliverable_id):
     deliverable_to_remove.status = "Deleted"
 
     # Email contributor
-    error_message = send_notifications_to_contributor(project)
+    error_message = send_notifications_to_contributor(deliverable_to_remove)
     # Message
     if error_message:
         messages.success(request, error_message)
@@ -664,7 +664,7 @@ def check_and_release_deliverable_view(request, deliverable_id):
         deliverable.save()
 
         # Email contributor
-        error_message = send_notifications_to_contributor(project)
+        error_message = send_notifications_to_contributor(deliverable)
         # Message
         if error_message:
             messages.success(request, error_message)
