@@ -7,6 +7,7 @@ from django.urls import reverse
 from accounts.models import ProjectPlannerUser
 
 
+# my_account_view page
 class AccountPageTestCase(TestCase):
 
     def setUp(self):
@@ -52,52 +53,52 @@ class AccountPageTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-# # my_contribution_view page
-# class MyContributionPageTestCase(TestCase):
-#
-#     def setUp(self):
-#         """ Set up variables before launching tests.
-#         """
-#         # Creation of an user
-#         test_user = ProjectPlannerUser.objects. \
-#             create_user(email="test_man@itest.com",
-#                         first_name="Claude",
-#                         name="Francois",
-#                         team="Designer",
-#                         password="Chanson",
-#                         )
-#         test_user.save()
-#
-#     # test page returns 200
-#     def test_contribution_page_return_200_when_user_is_connected(self):
-#         """
-#         Check if once connected, the user has access to his profile page.
-#         :return:
-#         """
-#
-#         # Authenticate an user
-#         self.client.login(username="test_man@itest.com",
-#                           password="Chanson")
-#         # Look for the page
-#         response = self.client.get(reverse('accounts:myContribution'))
-#
-#         # Check page
-#         self.assertEqual(response.status_code, 200)
-#         self.assertEqual(str(response.context['user']), 'test_man@itest.com')
-#         self.assertTemplateUsed('accounts/myContribution.html')
-#
-#     # test page doesn't return 200
-#     def test_contribution_page_return_200_when_user_is_not_connected(self):
-#         """
-#         Check if not connected, the user has access to his profile page.
-#         :return:
-#         """
-#         response = self.client.get(reverse('accounts:myContribution'))
-#
-#         self.assertNotEqual(response.status_code, 200)
-#         self.assertEqual(response.status_code, 302)
-#
-#
+# my_contribution_view page
+class MyContributionPageTestCase(TestCase):
+
+    def setUp(self):
+        """ Set up variables before launching tests.
+        """
+        # Creation of an user
+        test_user = ProjectPlannerUser.objects. \
+            create_user(email="test_man@itest.com",
+                        first_name="Claude",
+                        name="Francois",
+                        team="Designer",
+                        password="Chanson",
+                        )
+        test_user.save()
+
+    # test page returns 200
+    def test_contribution_page_return_200_when_user_is_connected(self):
+        """
+        Check if once connected, the user has access to his profile page.
+        :return:
+        """
+
+        # Authenticate an user
+        self.client.login(username="test_man@itest.com",
+                          password="Chanson")
+        # Look for the page
+        response = self.client.get(reverse('accounts:myContribution'))
+
+        # Check page
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(str(response.context['user']), 'test_man@itest.com')
+        self.assertTemplateUsed('accounts/myContribution.html')
+
+    # test page doesn't return 200
+    def test_contribution_page_return_200_when_user_is_not_connected(self):
+        """
+        Check if not connected, the user has access to his profile page.
+        :return:
+        """
+        response = self.client.get(reverse('accounts:myContribution'))
+
+        self.assertNotEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+
+
 # # signup_view page
 # class SignupPageTestCase(TestCase):
 #
