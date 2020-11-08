@@ -47,8 +47,6 @@ def send_notifications_to_contributor(event_from):
     for contributor in contributor_list:
         contributor_email_list.append(str(contributor.projectPlannerUser.email))
 
-    # print(contributor_email_list)
-
     # Sending
     email = EmailMessage(title_email,
                          body_email,
@@ -64,6 +62,7 @@ def send_notifications_to_contributor(event_from):
         # Message
         message = "Contributors is not log on Mailgun"
         print("Contributors is not log on Mailgun. " + str(error))
-        
+
     return message
+
 
