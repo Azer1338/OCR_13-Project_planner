@@ -58,9 +58,12 @@ def send_notifications_to_contributor(event_from):
     # Raise an Error if someone is not add into Mailgun interface.
     try:
         email.send()
+        # Message
+        message= "Successfully send!"
     except MailgunAPIError as error:
         # Message
         message = "Contributors is not log on Mailgun"
         print("Contributors is not log on Mailgun. " + str(error))
-        return message
-# GO
+        
+    return message
+
