@@ -1,11 +1,14 @@
 import unittest
 import datetime
+from unittest import mock
+from unittest.mock import patch
 
 from django.test import TestCase, Client
 
 
 # display_deliverable_view Page
 from accounts.models import ProjectPlannerUser
+from document import models
 from document.models import Document
 from project.function_for_project import define_deliverable_progression
 from project.models import Project, Deliverable, ContributorDeliverable
@@ -37,11 +40,12 @@ class AddDocumentToDeliverableViewTestCase(TestCase):
                    project=project, )
         deliverable.contributor.add(test_user)
         deliverable.save()
+
         # Generate document
-        # document = Document.objects.
-        # create(name="TEST ADD DOCUMENT DOCUMENT",
-        # link="TEST LINK", deliverable=deliverable)
-        # document.save()
+        with mock.patch('document.models.CloudinaryField', return_value='https//:www.all_ok.com'):
+            document = Document.objects.create(name="TEST ADD DOCUMENT DOCUMENT",
+                                               link="TEST LINK", deliverable=deliverable)
+        document.save()
 
     def test_adding_a_document_to_deliverable_page_on_get_method(self):
         """Check a modification on model request by user.
@@ -64,26 +68,28 @@ class AddDocumentToDeliverableViewTestCase(TestCase):
         self.assertTemplateUsed(response,
                                 'document/addDocumentToDeliverable.html')
 
-    # def test_adding_a_document_to_deliverable_page_on_post_method(self):
-    #     """Check a modification on model request by user.
-    #     """
-    #     # Generate a fake user
-    #     c = Client()
-    #     c.login(email="test_man@itest.com", password="Chanson")
-    #     # Generate a dynamic url
-    #     deliverable = Deliverable.objects. \
-    #         get(name="TEST ADD DOCUMENT DELIVERABLE")
-    #     url = '/document/addDocumentToDeliverable/' + \
-    #           str(deliverable.id) + '/'
-    #     response = c.post(url,
-    #                       data={'deliverable': deliverable.id,
-    #                             'name': 'Test',
-    #                             'link': 'https//test.py'},
-    #                       )
-    #     # Generate a dynamic url
-    #     url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
-    #     # Check the return message
-    #     self.assertRedirects(response, url2, status_code=302)
+    @mock.patch('document.views.AddDocumentToDeliverableForm')
+    def test_adding_a_document_to_deliverable_page_on_post_method(self, mock_check_output):
+        """Check a modification on model request by user.
+        """
+        # Generate a fake user
+        c = Client()
+        c.login(email="test_man@itest.com", password="Chanson")
+        # Generate a dynamic url
+        deliverable = Deliverable.objects. \
+            get(name="TEST ADD DOCUMENT DELIVERABLE")
+        document = Document.objects.get(name='TEST ADD DOCUMENT DOCUMENT')
+        url = '/document/addDocumentToDeliverable/' + \
+              str(deliverable.id) + '/'
+        response = c.post(url,
+                          data={'deliverable': deliverable.id,
+                                'name': 'Test',
+                                'link': 'https//test.py'},
+                          )
+        # Generate a dynamic url
+        url2 = '/displayDeliverable/' + str(deliverable.id) + '/'
+        # Check the return message
+        self.assertRedirects(response, url2, status_code=302)
 
 
 # Deliverable model
