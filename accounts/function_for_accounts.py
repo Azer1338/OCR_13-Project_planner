@@ -1,9 +1,8 @@
 # Some functions to support the code
-from django.contrib import messages
 from django.core.mail import EmailMessage
 from django_mailgun import MailgunAPIError
 
-from project.models import Deliverable, Project, ContributorDeliverable, ContributorProject
+from project.models import ContributorDeliverable, ContributorProject
 
 
 def send_notifications_to_contributor(event_from):
