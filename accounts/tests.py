@@ -1,15 +1,10 @@
-from django.test import TestCase, Client
-#
+from django.test import TestCase
 
 # my_account_view page
-from django.test import Client
-from django.urls import reverse
-from django_forms_test import FormTest, field
 
-from accounts.forms import RegisterForm, MyUserAdminCreationForm
-from accounts.function_for_accounts import send_notifications_to_contributor
+from django.urls import reverse
+
 from accounts.models import ProjectPlannerUser
-from project.models import Project, Deliverable
 
 
 class AccountPageTestCase(TestCase):
