@@ -314,6 +314,8 @@ class FunctionForAccounts(TestCase):
         test_project.save()
         test_project.contributor.add(test_user)
 
+        print(test_user)
+
         # Mock EmailMessage.send function
         EmailMessage.send = MagicMock(return_value=0)
 
