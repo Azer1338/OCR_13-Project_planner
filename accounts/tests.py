@@ -319,8 +319,9 @@ class FunctionForAccounts(TestCase):
 
         # Test the function
         message = send_notifications_to_contributor(test_project)
+        print(message)
 
-        self.assertTrue(True,True)
+        self.assertTrue(message, "Successfully !")
 
     def test_send_notifications_to_contributor_deliverable(self):
         # Creation of an user
