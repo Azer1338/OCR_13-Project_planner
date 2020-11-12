@@ -1,4 +1,6 @@
 from unittest.mock import MagicMock
+from unittest import mock
+from unittest.mock import patch
 
 from django.core.mail.message import EmailMessage
 from django.test import TestCase, Client
@@ -314,16 +316,13 @@ class FunctionForAccounts(TestCase):
         test_project.save()
         test_project.contributor.add(test_user)
 
-        print(test_user)
-
         # Mock EmailMessage.send function
-        EmailMessage.send = MagicMock(return_value=0)
+        # EmailMessage.send = MagicMock(return_value=0)
 
         # Test the function
         message = send_notifications_to_contributor(test_project)
-        print(message)
 
-        self.assertTrue(message, "Successfully !")
+        self.assertEqual(message, "Successfully send!")
 
     def test_send_notifications_to_contributor_deliverable(self):
         # Creation of an user
