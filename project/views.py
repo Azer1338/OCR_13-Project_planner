@@ -199,7 +199,7 @@ def delete_project_view(request, project_id):
     error_message = send_notifications_to_contributor(project)
     # Message
     if error_message:
-        messages.success(request, error_message)
+        messages.warning(request, error_message)
     else:
         messages.success(request, 'Project created!')
 
@@ -332,7 +332,7 @@ def deliverable_listing_view(request, project_id):
             messages.success(request, 'Deliverable added')
         else:
             # Message
-            messages.error(request, 'Some fields are not correct.')
+            messages.warning(request, 'Some fields are not correct.')
 
     # Initial page call
     else:
@@ -368,7 +368,7 @@ def delete_deliverable_view(request, deliverable_id):
     error_message = send_notifications_to_contributor(deliverable_to_remove)
     # Message
     if error_message:
-        messages.success(request, error_message)
+        messages.warning(request, error_message)
     else:
         messages.success(request, 'Project created!')
 
@@ -406,7 +406,7 @@ def check_and_release_project_view(request, project_id):
         error_message = send_notifications_to_contributor(project)
         # Message
         if error_message:
-            messages.success(request, error_message)
+            messages.warning(request, error_message)
         else:
             messages.success(request, 'Project created!')
     else:
@@ -668,7 +668,7 @@ def check_and_release_deliverable_view(request, deliverable_id):
         error_message = send_notifications_to_contributor(deliverable)
         # Message
         if error_message:
-            messages.success(request, error_message)
+            messages.warning(request, error_message)
         else:
             messages.success(request, 'Project created!')
 
@@ -679,7 +679,7 @@ def check_and_release_deliverable_view(request, deliverable_id):
         deliverable.save()
 
         # Message
-        messages.success(request, 'Not all contributors agreed on it!')
+        messages.error(request, 'Not all contributors agreed on it!')
 
     return redirect("project:displayDeliverable",
                     deliverable_id=deliverable_id)
