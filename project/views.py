@@ -23,6 +23,7 @@ from main.settings import env
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
 def index_view(request):
     """
     Return index page.
